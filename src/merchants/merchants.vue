@@ -88,6 +88,17 @@ export default {
                   }
                 },
                 "删除"
+              ),
+              h(
+                "Button",
+                {
+                  on:{
+                    click: ()=>{
+                      this.edit(params.row.id)
+                    }
+                  }
+                },
+                "修改"
               )
             ]);
           }
@@ -117,6 +128,9 @@ export default {
           alert(res.dasta.notice)
         }
       });
+    },
+    edit(merchant_id){
+      this.$router.push(`merchants/${merchant_id}/edit`)
     }
   }
 };
