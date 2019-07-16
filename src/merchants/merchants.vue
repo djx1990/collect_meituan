@@ -1,7 +1,7 @@
 <template>
   <Row type="flex" :gitter="24">
     <Col>
-      <Table border sortable :columns="columns" :data="merchants"></Table>
+      <Table border stripe :columns="columns" :data="merchants"></Table>
     </Col>
   </Row>
 </template>
@@ -87,6 +87,12 @@ export default {
       this.merchants = res.data.merchants;
       console.log("merchants", merchants);
     });
+  },
+  methods:{
+    show(){
+      this.$ruoter.push(`merchants/${merchants_id}`)
+      console.log(merchants.id)
+    }
   }
 };
 </script>
