@@ -77,6 +77,17 @@ export default {
                   }
                 },
                 "查看"
+              ),
+              h(
+                "Button",
+                {
+                  on: {
+                    click: () => {
+                      this.remove(params.index);
+                    }
+                  }
+                },
+                "删除"
               )
             ]);
           }
@@ -95,6 +106,17 @@ export default {
     show(merchant_id) {
       console.log(merchant_id);
       this.$router.push(`merchants/${merchant_id}`);
+    },
+    remove(index) {
+      let merchant = this.merchants[index];
+      this.$http.delete(`merchants/${merchant.id}`).then(res => {
+        if (res.data.status === 1) {
+          this.merchants.splice(index, 1);
+          alert(res.data.notice);
+        }else{
+          alert(res.dasta.notice)
+        }
+      });
     }
   }
 };

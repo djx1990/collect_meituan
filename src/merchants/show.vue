@@ -1,5 +1,7 @@
 <template>
   <Row type="flex" :gutter="16">
+    <h3>查看商家</h3>
+    <Divider /> 
     <Col :span="24">
       <p>城市</p>
       <Input disabled v-model="merchant.city_name"></Input>
@@ -22,7 +24,7 @@
     <Divider />
     <Col :span="24">
       <p>分类</p>
-      <Input disabled v-model="merchant.catenname"></Input>
+      <Input disabled v-model="merchant.catename"></Input>
     </Col>
     <Divider />
     <Col :span="24">
