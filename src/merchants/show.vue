@@ -1,28 +1,70 @@
 <template>
   <Row type="flex" :gutter="16">
-    <Col>
+    <Col :span="24">
       <p>城市</p>
-      <Input disabled v-model="merchants.city_name"></Input>
+      <Input disabled v-model="merchant.city_name"></Input>
     </Col>
+    <Divider />
+    <Col :span="24">
+      <p>区域</p>
+      <Input disabled v-model="merchant.areaname"></Input>
+    </Col>
+    <Divider />
+    <Col :span="24">
+      <p>平均价格</p>
+      <Input disabled v-model="merchant.avgprice"></Input>
+    </Col>
+    <Divider />
+    <Col :span="24">
+      <p>平均评分</p>
+      <Input disabled v-model="merchant.avgscore"></Input>
+    </Col>
+    <Divider />
+    <Col :span="24">
+      <p>分类</p>
+      <Input disabled v-model="merchant.catenname"></Input>
+    </Col>
+    <Divider />
+    <Col :span="24">
+      <p>店名</p>
+      <Input disabled v-model="merchant.name"></Input>
+    </Col>
+    <Divider />
+    <Col :span="24">
+      <p>商家地址</p>
+      <Input disabled v-model="merchant.address"></Input>
+    </Col>
+    <Divider />
+        <Col :span="24">
+      <p>商家电话</p>
+      <Input disabled v-model="merchant.phone"></Input>
+    </Col>
+    <Divider />
+        <Col :span="24">
+      <p>商家图片</p>
+      <Input disabled v-model="merchant.frontimg"></Input>
+    </Col>
+    <Divider />
   </Row>
 </template>
 <script>
-import { Row, Col, Input } from "iview";
+import { Row, Col, Input, Divider } from "iview";
 export default {
   components: {
     Row,
     Col,
-    Input
+    Input,
+    Divider
   },
-  data(){
+  data() {
     return {
-      merchants:[]
-    }
+      merchant: []
+    };
   },
-  created(){
-    this.$http.get(`/merchants`).then(res => {
-      this.merchants = res.data.merchants
-    })
+  created() {
+    this.$http.get(`/merchants/${this.$route.id}`).then(res => {
+      this.merchant = res.data.merchant;
+    });
   }
 };
 </script>

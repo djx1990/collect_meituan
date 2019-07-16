@@ -62,20 +62,23 @@ export default {
         {
           title: "操作",
           key: "action",
-          render:(h,params)=>{
-            return h("div",[
-              h("Button",{
-               props:{
-                 type: 'parime'
-               },
-               on:{
-                 cilck:()=>{
-                   this.show(params.row.id)
-                 }
-               }
-              },
-              'show')
-            ])
+          render: (h, params) => {
+            return h("div", [
+              h(
+                "Button",
+                {
+                  props: {
+                    type: "parime"
+                  },
+                  on: {
+                    click: () => {
+                      this.show(params.row.id);
+                    }
+                  }
+                },
+                "查看"
+              )
+            ]);
           }
         }
       ],
@@ -83,15 +86,15 @@ export default {
     };
   },
   created() {
-    this.$http.get(`/merchants`).then(res => {
+    this.$http.get("/merchants").then(res => {
       this.merchants = res.data.merchants;
-      console.log("merchants", merchants);
+      console.log(merchants);
     });
   },
-  methods:{
-    show(){
-      this.$ruoter.push(`merchants/${merchants_id}`)
-      console.log(merchants.id)
+  methods: {
+    show(merchant_id) {
+      console.log(merchant_id);
+      this.$router.push(`merchants/${merchant_id}`);
     }
   }
 };
