@@ -25,7 +25,7 @@
         <Button type="error" size="small" @click="exportData(1)">导出为Excel</Button>
       </Col>
       <Col :span="24">
-        <Table border stripe :columns="columns" :data="merchants"></Table>
+        <Table border stripe :columns="columns" :data="merchants" ref="table"></Table>
       </Col>
     </Row>
   </Row>
