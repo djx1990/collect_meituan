@@ -3,17 +3,17 @@
     <Row type="flex" :gutter='12'>
       <Col :span="2">城市:</Col>
       <Col :span="5">
-        <Input v-model="merchants.city_name" size="small"></Input>
+        <Input v-model="merchants.city_name" size="small" ></Input>
       </Col>
       <Col :span="2">店名:</Col>
       <Col :span="5">
         <Input v-model="merchants.name" size="small"></Input>
       </Col>
-      <Col :span="3">商铺ID:</Col>
+     <Col :span="2">分类:</Col>
       <Col :span="5">
-        <Input v-model="merchants.id" size="small"></Input>
-      </Col>
-      <Col :span="2">
+        <Input v-model="merchants.catename" size="small"></Input>
+      </Col> 
+     <Col :span="2">
         <Button type="primary" size="small">搜索</Button>
       </Col>
     </Row>
@@ -28,10 +28,15 @@
         <Table border stripe :columns="columns" :data="merchants" ref="table"></Table>
       </Col>
     </Row>
+    <Row type="flex" :gutter="24">
+      <Col :span="24" :offset="24">
+        <Page :total='100' show-elevator @on-change="page"></Page>  
+      </Col>
+    </Row>
   </Row>
 </template>
 <script>
-import { Table, Row, Col, Input, Button, Divider } from "iview";
+import { Table, Row, Col, Input, Button, Divider, Page } from "iview";
 export default {
   components: {
     Table,
@@ -39,10 +44,12 @@ export default {
     Col,
     Input,
     Button,
-    Divider
+    Divider,
+    Page
   },
   data() {
     return {
+      query:'',
       columns: [
         {
           title: "ID",
@@ -138,7 +145,7 @@ export default {
   created() {
     this.$http.get("/merchants").then(res => {
       this.merchants = res.data.merchants;
-      console.log(merchants);
+     
     });
   },
   methods: {
@@ -176,7 +183,24 @@ export default {
           filename: 'the original data'
         })
       }
+    },
+    page(page){
+      this.$http.get(`/merchants?page=${page}`).then(res =>{
+        this.merchants = res.data.merchants
+      })
     }
+    // citysearch(){
+    //   if(this.query == ''){
+    //     this.$http.get(`/merchants?query=${this.query}`).then(res =>{
+    //       this.merchants = res.data.merchants
+    //        console.log(merchants);
+    //     })
+    //   }else{
+    //     this.merchants = this.merchants.filter(val => {
+    //       return val.city_name.includes(this.query)
+    //     })
+    //   }
+    // }
   }
 };
 </script>
