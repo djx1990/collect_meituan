@@ -1,18 +1,45 @@
 <template>
   <Row type="flex" :gitter="24">
-    <Col>
-      <Table border stripe :columns="columns" :data="merchants"></Table>
-    </Col>
+    <Row type="flex" :gutter='12'>
+      <Col :span="2">城市:</Col>
+      <Col :span="5">
+        <Input v-model="merchants.city_name" size="small"></Input>
+      </Col>
+      <Col :span="2">店名:</Col>
+      <Col :span="5">
+        <Input v-model="merchants.name" size="small"></Input>
+      </Col>
+      <Col :span="3">商铺ID:</Col>
+      <Col :span="5">
+        <Input v-model="merchants.id" size="small"></Input>
+      </Col>
+      <Col :span="2">
+        <Button type="primary" size="small">搜索</Button>
+      </Col>
+    </Row>
+    <Divider dashed />
+    <Row>
+      <Col :span="6">商家列表</Col>
+      <Col :span="3" :offset="15">
+        <Button type="error" size="small" @click="remove_all">一键删除</Button>
+        <Button type="error" size="small" @click="exportData(1)">导出为Excel</Button>
+      </Col>
+      <Col :span="24">
+        <Table border stripe :columns="columns" :data="merchants"></Table>
+      </Col>
+    </Row>
   </Row>
 </template>
 <script>
-import { Table, Row, Col, Input } from "iview";
+import { Table, Row, Col, Input, Button, Divider } from "iview";
 export default {
   components: {
     Table,
     Row,
     Col,
-    Input
+    Input,
+    Button,
+    Divider
   },
   data() {
     return {
@@ -32,7 +59,8 @@ export default {
         {
           title: "平均价格",
           key: "avgprice",
-          sortable: true
+          sortable: true,
+          
         },
         {
           title: "平均评分",
@@ -92,9 +120,9 @@ export default {
               h(
                 "Button",
                 {
-                  on:{
-                    click: ()=>{
-                      this.edit(params.row.id)
+                  on: {
+                    click: () => {
+                      this.edit(params.row.id);
                     }
                   }
                 },
@@ -124,13 +152,30 @@ export default {
         if (res.data.status === 1) {
           this.merchants.splice(index, 1);
           alert(res.data.notice);
-        }else{
-          alert(res.dasta.notice)
+        } else {
+          alert(res.dasta.notice);
         }
       });
     },
-    edit(merchant_id){
-      this.$router.push(`merchants/${merchant_id}/edit`)
+    edit(merchant_id) {
+      this.$router.push(`merchants/${merchant_id}/edit`);
+    },
+    remove_all(){
+      this.$http.delete(`merchants/deleteall`).then(res =>{
+        if(res.data.status === 1){
+          this.merchants = []
+          alert(res.data.notice)
+        }else{
+          alert(res.data.notice)
+        }
+      })
+    },
+    exportData(type){
+      if(type === 1){
+        this.$refs.table.exportCsv({
+          filename: 'the original data'
+        })
+      }
     }
   }
 };

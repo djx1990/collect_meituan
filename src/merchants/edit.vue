@@ -47,7 +47,7 @@
       <Input v-model="merchant.frontimg"></Input>
     </Col>
     <Divider />
-    <Button type="primary" :click="save">保存</Button>
+    <Button type="primary" @click="save">保存</Button>
   </Row>
 </template>
 <script>
@@ -70,15 +70,17 @@ export default {
       this.merchant = res.data.merchant;
     });
   },
+  methods:{
   save(){
     this.$http.put(`merchants/${this.$route.id}`).then(res =>{
       if(res.data.status === 1){
-        this.$router.push(`merchants/`)
+        this.$router.push(`/merchants`)
         alert(res.data.notice)
       }else{
         alert(res.data.notice)
       }
     })
+  }
   }
 };
 </script>
