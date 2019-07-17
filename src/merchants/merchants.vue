@@ -29,7 +29,7 @@
       </Col>
     </Row>
     <Row type="flex" :gutter="24">
-      <Col :span="24" :offset="24">
+      <Col :span="24">
         <Page :total="100" show-elevator @on-change="page"></Page>
       </Col>
     </Row>
@@ -117,22 +117,22 @@ export default {
                 {
                   on: {
                     click: () => {
-                      this.remove(params.index);
+                      this.edit(params.row.id);
                     }
                   }
                 },
-                "删除"
+                "修改"
               ),
               h(
                 "Button",
                 {
                   on: {
                     click: () => {
-                      this.edit(params.row.id);
+                      this.remove(params.index);
                     }
                   }
                 },
-                "修改"
+                "删除"
               )
             ]);
           }
