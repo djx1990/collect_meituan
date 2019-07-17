@@ -1,20 +1,20 @@
 <template>
   <Row type="flex" :gitter="24">
-    <Row type="flex" :gutter='12'>
+    <Row type="flex" :gutter="12">
       <Col :span="2">城市:</Col>
       <Col :span="5">
-        <Input v-model="merchants.city_name" size="small" ></Input>
+        <Input v-model="merchants.city_name" size="small"></Input>
       </Col>
       <Col :span="2">店名:</Col>
       <Col :span="5">
         <Input v-model="merchants.name" size="small"></Input>
       </Col>
-     <Col :span="2">分类:</Col>
+      <Col :span="2">分类:</Col>
       <Col :span="5">
         <Input v-model="merchants.catename" size="small"></Input>
-      </Col> 
-     <Col :span="2">
-        <Button type="primary" size="small">搜索</Button>
+      </Col>
+      <Col :span="2">
+        <Button type="primary" size="small" @click="search">搜索</Button>
       </Col>
     </Row>
     <Divider dashed />
@@ -30,7 +30,7 @@
     </Row>
     <Row type="flex" :gutter="24">
       <Col :span="24" :offset="24">
-        <Page :total='100' show-elevator @on-change="page"></Page>  
+        <Page :total="100" show-elevator @on-change="page"></Page>
       </Col>
     </Row>
   </Row>
@@ -49,7 +49,7 @@ export default {
   },
   data() {
     return {
-      query:'',
+      merchantsSearch: [],
       columns: [
         {
           title: "ID",
@@ -66,8 +66,7 @@ export default {
         {
           title: "平均价格",
           key: "avgprice",
-          sortable: true,
-          
+          sortable: true
         },
         {
           title: "平均评分",
@@ -145,7 +144,6 @@ export default {
   created() {
     this.$http.get("/merchants").then(res => {
       this.merchants = res.data.merchants;
-     
     });
   },
   methods: {
@@ -167,40 +165,45 @@ export default {
     edit(merchant_id) {
       this.$router.push(`merchants/${merchant_id}/edit`);
     },
-    remove_all(){
-      this.$http.delete(`merchants/deleteall`).then(res =>{
-        if(res.data.status === 1){
-          this.merchants = []
-          alert(res.data.notice)
-        }else{
-          alert(res.data.notice)
+    remove_all() {
+      this.$http.delete(`merchants/deleteall`).then(res => {
+        if (res.data.status === 1) {
+          this.merchants = [];
+          alert(res.data.notice);
+        } else {
+          alert(res.data.notice);
         }
-      })
+      });
     },
-    exportData(type){
-      if(type === 1){
+    exportData(type) {
+      if (type === 1) {
         this.$refs.table.exportCsv({
-          filename: 'the original data'
-        })
+          filename: "the original data"
+        });
       }
     },
-    page(page){
-      this.$http.get(`/merchants?page=${page}`).then(res =>{
-        this.merchants = res.data.merchants
-      })
+    page(page) {
+      this.$http.get(`/merchants?page=${page}`).then(res => {
+        this.merchants = res.data.merchants;
+      });
+    },
+    search() {
+      let search = this.merchants.city_name;
+      this.$http.get(`/merchants`).then(res => {
+        if (search) {
+          this.merchantsSearch = this.merchants.filter(merchants => {
+            console.log(merchants);
+            return Object.keys(merchants).some(key => {
+              return String(
+                merchants(key)
+                  .toLowerCase()
+                  .indexOf(search) > -1
+              );
+            });
+          });
+        }
+      });
     }
-    // citysearch(){
-    //   if(this.query == ''){
-    //     this.$http.get(`/merchants?query=${this.query}`).then(res =>{
-    //       this.merchants = res.data.merchants
-    //        console.log(merchants);
-    //     })
-    //   }else{
-    //     this.merchants = this.merchants.filter(val => {
-    //       return val.city_name.includes(this.query)
-    //     })
-    //   }
-    // }
   }
 };
 </script>

@@ -75,7 +75,10 @@ export default {
         {
           name: "平台管理",
           icon: "ios-navigate",
-          chilren: [{ name: "商家管理", icon: "ios-navigate", to: "/merchants" }]
+          chilren: [
+            { name: "商家管理", icon: "ios-navigate", to: "/merchants" },
+            { name: "外买商家管理", icon: "ios-navigate", to: "/waimai_merchants" }
+            ]
         }
       ],
       show: false
