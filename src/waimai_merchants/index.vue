@@ -61,6 +61,9 @@ export default {
               h(
                 "Button",
                 {
+                  style: {
+                    marginRight: "5px"
+                  },
                   on: {
                     click: () => {
                       this.$router.push(`/waimai_merchants/${params.row.id}`);
@@ -72,6 +75,9 @@ export default {
               h(
                 "Button",
                 {
+                  style: {
+                    marginRight: "5px"
+                  },
                   on: {
                     click: () => {
                       this.remove(params.index);
@@ -79,6 +85,19 @@ export default {
                   }
                 },
                 "删除"
+              ),
+              h(
+                'Button',{
+                  style:{
+                   marginRight:'5px'
+                  },
+                  on:{
+                    click:()=>{
+                      this.$router.push(`/waimai_merchants/${params.row.id}/edit`)
+                    }
+                  }
+                },
+                "修改"
               )
             ]);
           }

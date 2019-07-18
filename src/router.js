@@ -40,6 +40,12 @@ const router = new VueRouter({
       name: "waimai_merchantsShow",
       component: () =>
         import(/* webpackChunkName: "about" */ "./waimai_merchants/show.vue")
+    },
+    {
+      path: "/waimai_merchants/:id/edit",
+      name: "waimai_merchantsEdit",
+      component: () =>
+        import(/* webpackChunkName: "about" */ "./waimai_merchants/edit.vue")
     }
   ]
 });
