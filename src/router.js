@@ -10,12 +10,12 @@ const router = new VueRouter({
   routes: [
     {
       path: "/merchants",
-      name: "merchants",
+      name: "merchantsIndex",
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
       component: () =>
-        import(/* webpackChunkName: "about" */ "./merchants/merchants.vue")
+        import(/* webpackChunkName: "about" */ "./merchants/index.vue")
     },
     {
       path: "/merchants/:id",
@@ -31,9 +31,15 @@ const router = new VueRouter({
     },
     {
       path: "/waimai_merchants",
-      name: "waimai_merchants",
+      name: "waimai_merchantsIndex",
       component: () =>
-        import(/* webpackChunkName: "about" */ "./waimai_merchants/waimai_merchants.vue")
+        import(/* webpackChunkName: "about" */ "./waimai_merchants/index.vue")
+    },
+    {
+      path: "/waimai_merchants/:id",
+      name: "waimai_merchantsShow",
+      component: () =>
+        import(/* webpackChunkName: "about" */ "./waimai_merchants/show.vue")
     }
   ]
 });
