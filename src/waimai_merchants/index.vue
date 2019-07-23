@@ -1,6 +1,18 @@
 <template>
   <Row type="flex" :gutter="12">
     <Col :span="24">
+      商户名：
+      <Input search v-model="query1" @on-search="search1" style="width:200px"></Input>
+    </Col>
+    <!-- <Select v-model="query" fiterable remote :remote-method="search" :loading="loading">
+      <Option
+        v-for="(city,index) in citiesFilter"
+        :value="cities.value"
+        :key="index"
+      >{{ city.label }}</Option>
+    </Select> -->
+    <Divider dashed />
+    <Col :span="24">
       <Table border stripe :columns="columns" :data="waimai_merchants"></Table>
     </Col>
     <Col>
@@ -9,16 +21,25 @@
   </Row>
 </template>
 <script>
-import { Row, Col, Table, Page } from "iview";
+import { Row, Col, Table, Page, Input, Divider, Select, Option } from "iview";
 export default {
   components: {
     Row,
     Col,
     Table,
-    Page
+    Page,
+    Input,
+    Divider,
+    Select,
+    Option
   },
   data() {
     return {
+      query: "",
+      query1: "",
+      citiesFilter: [],
+      cities: [],
+      loading: false,
       columns: [
         {
           title: "ID",
@@ -87,13 +108,16 @@ export default {
                 "删除"
               ),
               h(
-                'Button',{
-                  style:{
-                   marginRight:'5px'
+                "Button",
+                {
+                  style: {
+                    marginRight: "5px"
                   },
-                  on:{
-                    click:()=>{
-                      this.$router.push(`/waimai_merchants/${params.row.id}/edit`)
+                  on: {
+                    click: () => {
+                      this.$router.push(
+                        `/waimai_merchants/${params.row.id}/edit`
+                      );
                     }
                   }
                 },
@@ -107,6 +131,10 @@ export default {
     };
   },
   created() {
+    // this.$http.get("/cities").then(res => {
+    //   this.cities = res.data.cities;
+    //   this.get_selected();
+    // });
     this.$http.get("/waimai_merchants").then(res => {
       this.waimai_merchants = res.data.waimai_merchants;
     });
@@ -129,7 +157,40 @@ export default {
             alert(res.data.notice);
           }
         });
-    }
+    },
+    search1() {
+      if (this.query1 == "") {
+        this.$http.get(`/waimai_merchants?query1=${this.query1}`).then(res => {
+          this.waimai_merchants = res.data.waimai_merchants;
+        });
+      } else {
+        this.waimai_merchants = this.waimai_merchants.filter(val => {
+          return val.shop_name.includes(this.query1);
+        });
+      }
+    },
+    // get_selected() {
+    //   let cities1 = this.cities.map(item => {
+    //     return {
+    //       value: item.id,
+    //       label: item.name
+    //     };
+    //   });
+    //   console.log(cities1, 11);
+    //   this.citiesFilter = cities1.filter(val => {
+    //     return val;
+    //   });
+    //   // console.log(this.citiesFilter,this.cities)
+    // },
+    // search(query) {
+    //   if (query !== "") {
+    //     this.loading = true;
+    //     setTimeout(() => {
+    //       this.loading = false;
+    //       console.log("远程搜索");
+    //     }, 200);
+    //   }
+    // }
   }
 };
 </script>

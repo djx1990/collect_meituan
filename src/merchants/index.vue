@@ -3,19 +3,19 @@
     <Row type="flex" :gutter="12">
       <Col :span="2">城市:</Col>
       <Col :span="5">
-        <Input v-model="merchants.city_name" size="small"></Input>
+        <Input v-model="query" size="small" search @on-search="search"></Input>
       </Col>
       <Col :span="2">店名:</Col>
       <Col :span="5">
-        <Input v-model="merchants.name" size="small"></Input>
+        <Input v-model="query1" size="small" search @on-search="search1"></Input>
       </Col>
       <Col :span="2">分类:</Col>
       <Col :span="5">
-        <Input v-model="merchants.catename" size="small"></Input>
+        <Input v-model="query2" size="small" search @on-search="search2"></Input>
       </Col>
-      <Col :span="2">
+      <!-- <Col :span="2">
         <Button type="primary" size="small" @click="search">搜索</Button>
-      </Col>
+      </Col>-->
     </Row>
     <Divider dashed />
     <Row>
@@ -49,6 +49,9 @@ export default {
   },
   data() {
     return {
+      query: "",
+      query1: "",
+      query2: "",
       merchantsSearch: [],
       columns: [
         {
@@ -188,21 +191,37 @@ export default {
       });
     },
     search() {
-      let search = this.merchants.city_name;
-      this.$http.get(`/merchants`).then(res => {
-        if (search) {
-          this.merchantsSearch = this.merchants.filter(merchants => {
-            console.log(merchants);
-            return Object.keys(merchants).some(key => {
-              return String(
-                merchants(key)
-                  .toLowerCase()
-                  .indexOf(search) > -1
-              );
-            });
-          });
-        }
-      });
+      if (this.query == "") {
+        this.$http.get(`/merchants?query=${this.query}`).then(res => {
+          this.merchants = res.data.merchants;
+        });
+      } else {
+        this.merchants = this.merchants.filter(val => {
+          return val.city_name.includes(this.query);
+        });
+      }
+    },
+    search2() {
+      if (this.query2 == "") {
+        this.$http.get(`/merchants?query2=${this.query2}`).then(res => {
+          this.merchants = res.data.merchants;
+        });
+      } else {
+        this.merchants = this.merchants.filter(val => {
+          return val.catename.includes(this.query2);
+        });
+      }
+    },
+    search1() {
+      if (this.query1 == "") {
+        this.$http.get(`/merchants?query2=${this.query1}`).then(res => {
+          this.merchants = res.data.merchants;
+        });
+      } else {
+        this.merchants = this.merchants.filter(val => {
+          return val.name.includes(this.query1);
+        });
+      }
     }
   }
 };
