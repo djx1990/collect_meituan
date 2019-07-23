@@ -4,13 +4,22 @@
       商户名：
       <Input search v-model="query1" @on-search="search1" style="width:200px"></Input>
     </Col>
-    <!-- <Select v-model="query" fiterable remote :remote-method="search" :loading="loading">
+    <Select filterable @on-change='searchByCity' >
       <Option
-        v-for="(city,index) in citiesFilter"
-        :value="cities.value"
-        :key="index"
-      >{{ city.label }}</Option>
-    </Select> -->
+        v-for="city in cities"
+        :value="city.id"
+        :key="city.id"
+        :label='city.name'
+      ></Option>
+    </Select>
+    <Select filterable  >
+      <Option
+        v-for="category in categories"
+        :value="category.id"
+        :key="category.id"
+        :label='category.name'
+      ></Option>
+    </Select>
     <Divider dashed />
     <Col :span="24">
       <Table border stripe :columns="columns" :data="waimai_merchants"></Table>
@@ -35,6 +44,7 @@ export default {
   },
   data() {
     return {
+      categories: [],
       query: "",
       query1: "",
       citiesFilter: [],
@@ -131,10 +141,9 @@ export default {
     };
   },
   created() {
-    // this.$http.get("/cities").then(res => {
-    //   this.cities = res.data.cities;
-    //   this.get_selected();
-    // });
+    this.$http.get("/cities/list").then(res => {
+      this.cities = res.data.cities;
+    });
     this.$http.get("/waimai_merchants").then(res => {
       this.waimai_merchants = res.data.waimai_merchants;
     });
@@ -168,6 +177,13 @@ export default {
           return val.shop_name.includes(this.query1);
         });
       }
+    },
+    searchByCity (value) {
+      this.$http.get(`/categories/list?city_id=${value}`).then(res => {
+          
+        this.categories = res.data.categories;
+        console.log(this.categories)
+      });
     },
     // get_selected() {
     //   let cities1 = this.cities.map(item => {

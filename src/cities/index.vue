@@ -50,6 +50,16 @@ export default {
                   }
                 },
                 '查看'
+              ),
+              h(
+                "Button",{
+                  on:{
+                    click:()=>{
+                      this.caiji(params.row.id)
+                    }
+                  }
+                },
+                "采集"
               )
             ])
           }
@@ -62,6 +72,17 @@ export default {
     this.$http.get(`/cities`).then(res => {
       this.cities = res.data.cities;
     });
+  },
+  methods:{
+    caiji(){
+      this.$http.get(`/cities/${this.$route.id}/collect`).then(res =>{
+       if(res.data.status === 1){
+         alert(res.data.notice)
+       }else{
+         alert(res.data.notice)
+       }
+      })
+    }
   }
 };
 </script>
