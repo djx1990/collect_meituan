@@ -52,6 +52,12 @@ const router = new VueRouter({
       name: "cities",
       component: () =>
         import(/* webpackChunkName: "about" */ "./cities/index.vue")
+    },
+    {
+      path: "/cities/:id",
+      name: "citiesShow",
+      component: () =>
+        import(/* webpackChunkName: "about" */ "./cities/show.vue")
     }
   ]
 });

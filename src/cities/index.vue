@@ -45,7 +45,7 @@ export default {
                 "Button",{
                   on:{
                     click:()=>{
-                      this.$router(`/cities/${params.row.id}`)
+                      this.$router.push(`/cities/${params.row.id}`)
                     }
                   }
                 },
