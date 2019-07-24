@@ -47,17 +47,31 @@ export default {
         {
           title: "操作",
           key: "action",
-          render:(h,params)=>{
-            return h('div',[
-              h('Button',{
-                on:{
-                  click:()=>{
-                    this.$router.push(`/tuangous/${params.row.id}`)
+          render: (h, params) => {
+            return h("div", [
+              h(
+                "Button",
+                {
+                  on: {
+                    click: () => {
+                      this.$router.push(`/tuangous/${params.row.id}`);
+                    }
                   }
-                }
-              },
-              '查看')
-            ])
+                },
+                "查看"
+              ),
+              h(
+                "Button",
+                {
+                  on: {
+                    click: () => {
+                      this.$router.push(`/tuangous/${params.row.id}/edit`);
+                    }
+                  }
+                },
+                "修改"
+              )
+            ]);
           }
         }
       ],

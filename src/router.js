@@ -70,6 +70,12 @@ const router = new VueRouter({
       name: "tuangouShow",
       component: () =>
         import(/* webpackChunkName: "about" */ "./tuangous/show.vue")
+    },
+    {
+      path: "/tuangous/:id/edit",
+      name: "tuangouEdit",
+      component: () =>
+        import(/* webpackChunkName: "about" */ "./tuangous/edit.vue")
     }
   ]
 });
