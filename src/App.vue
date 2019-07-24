@@ -78,7 +78,8 @@ export default {
           chilren: [
             { name: "商家管理", icon: "ios-navigate", to: "/merchants" },
             { name: "外买商家管理", icon: "ios-navigate", to: "/waimai_merchants" },
-            { name: "城市", icon: "ios-navigate", to: "/cities" }
+            { name: "城市", icon: "ios-navigate", to: "/cities" },
+            { name: "团购", icon: "md-cart", to: "/tuangous" }
             ]
         }
       ],

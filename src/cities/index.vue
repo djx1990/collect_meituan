@@ -1,17 +1,22 @@
 <template>
   <Row type="flex" :gutter="16">
+    <Col :span='24' >
+      <Button type="primary" small @click="caijiCities">采集城市</Button>
+      <Button small type='error' @click="deleteAll">删除全部</Button>
+    </Col :span='24'>
     <Col>
-      <Table border strip :columns="columns" :data="cities"></Table>
+      <Table border strip :columns="columns" :data="cities" style="width:100%"></Table>
     </Col>
   </Row>
 </template>
 <script>
-import { Row, Col, Table } from "iview";
+import { Row, Col, Table, Button } from "iview";
 export default {
   components:{
     Row,
     Col,
-    Table
+    Table,
+    Button
   },
   data() {
     return {
@@ -81,6 +86,23 @@ export default {
        }else{
          alert(res.data.notice)
        }
+      })
+    },
+    caijiCities(){
+      this.$http.get(`/cities/collectcity`).then(res =>{
+        if(res.data.status === 1){
+          alert(res.data.notice)
+        }else{
+          alert(res.data.notice)
+        }
+      })
+    },
+    deleteAll(){
+      this.$http.delete(`/cities/deleteall`).then(res =>{
+        if(res.data.status === 1){
+          this.cities= []
+          alert(res.data.notice)
+        }
       })
     }
   }

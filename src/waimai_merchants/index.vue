@@ -4,20 +4,15 @@
       商户名：
       <Input search v-model="query1" @on-search="search1" style="width:200px"></Input>
     </Col>
-    <Select filterable @on-change='searchByCity' >
-      <Option
-        v-for="city in cities"
-        :value="city.id"
-        :key="city.id"
-        :label='city.name'
-      ></Option>
+    <Select filterable @on-change="searchByCity">
+      <Option v-for="city in cities" :value="city.id" :key="city.id" :label="city.name"></Option>
     </Select>
-    <Select filterable  >
+    <Select filterable>
       <Option
         v-for="category in categories"
         :value="category.id"
         :key="category.id"
-        :label='category.name'
+        :label="category.name"
       ></Option>
     </Select>
     <Divider dashed />
@@ -25,7 +20,14 @@
       <Table border stripe :columns="columns" :data="waimai_merchants"></Table>
     </Col>
     <Col>
-      <Page :total="100" show-elevator @on-change="page" />
+      <Page
+        :total="total"
+        :current="current_page"
+        show-tatal
+        show-elevator
+        page-size="10"
+        @on-change="page"
+      />
     </Col>
   </Row>
 </template>
@@ -137,7 +139,9 @@ export default {
           }
         }
       ],
-      waimai_merchants: []
+      waimai_merchants: [],
+      total: '',
+      current_page: 1
     };
   },
   created() {
@@ -146,12 +150,18 @@ export default {
     });
     this.$http.get("/waimai_merchants").then(res => {
       this.waimai_merchants = res.data.waimai_merchants;
+      this.total = res.data.total;
+      this.current_page = res.data.current_page;
+      console.log(res.data.total);
     });
   },
   methods: {
     page(page) {
       this.$http.get(`/waimai_merchants?page=${page}`).then(res => {
         this.waimai_merchants = res.data.waimai_merchants;
+        this.total = res.data.total
+        this.current_page = res.data.current_page;
+        
       });
     },
     remove(index) {
@@ -178,13 +188,12 @@ export default {
         });
       }
     },
-    searchByCity (value) {
+    searchByCity(value) {
       this.$http.get(`/categories/list?city_id=${value}`).then(res => {
-          
         this.categories = res.data.categories;
-        console.log(this.categories)
+        console.log(this.categories);
       });
-    },
+    }
     // get_selected() {
     //   let cities1 = this.cities.map(item => {
     //     return {

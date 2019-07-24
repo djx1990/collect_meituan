@@ -58,7 +58,13 @@ const router = new VueRouter({
       name: "citiesShow",
       component: () =>
         import(/* webpackChunkName: "about" */ "./cities/show.vue")
-    }
+    },
+    {
+      path: "/tuangous",
+      name: "tuangouIndex",
+      component: () =>
+        import(/* webpackChunkName: "about" */ "./tuangous/index.vue")
+    },
   ]
 });
 export default router;
