@@ -52,7 +52,7 @@ export default {
               h('Button',{
                 on:{
                   click:()=>{
-                    this.$ruoter.push(`/tuangous/show`)
+                    this.$router.push(`/tuangous/${params.row.id}`)
                   }
                 }
               },
