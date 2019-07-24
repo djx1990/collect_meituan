@@ -1,27 +1,35 @@
 <template>
   <Row type="flex" :gutter="16">
     <Col :span="24">
+      标题：
+      <Input search size="small" v-model="query" @on-search="search" style="width:200px"></Input>
+    </Col>
+    <Divider />
+    <Col :span="24">
       <Table border stripe :columns="columns" :data="daijinjuans"></Table>
     </Col>
   </Row>
 </template>
 <script>
-import { Row, Col, Table } from "iview";
+import { Row, Col, Table, Input, Divider } from "iview";
 export default {
   components: {
     Row,
     Col,
-    Table
+    Table,
+    Input,
+    Divider
   },
   data() {
     return {
+      query: "",
       columns: [
         {
-          title: "id",
+          title: "代金券id",
           key: "id"
         },
         {
-          title: "代金券id",
+          title: "商户id",
           key: "merchant_id"
         },
         {
@@ -78,13 +86,26 @@ export default {
           }
         }
       ],
-      daijinjuans:[]
+      daijinjuans: []
     };
   },
   created() {
-   this.$http.get(`/daijinjuans`).then(res => {
+    this.$http.get(`/daijinjuans`).then(res => {
       this.daijinjuans = res.data.daijinjuans;
     });
+  },
+  methods: {
+    search() {
+      if (this.query == "") {
+        this.$http.get(`/daijinjuans?query=${this.query}`).then(res => {
+          this.daijinjuans = res.data.daijinjuans;
+        });
+      } else {
+        this.daijinjuans = this.daijinjuans.filter(val => {
+          return val.title.includes(this.query);
+        });
+      }
+    }
   }
 };
 </script>
