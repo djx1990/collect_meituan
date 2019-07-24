@@ -76,6 +76,24 @@ const router = new VueRouter({
       name: "tuangouEdit",
       component: () =>
         import(/* webpackChunkName: "about" */ "./tuangous/edit.vue")
+    },
+    {
+      path: "/daijinjuans",
+      name: "daijinjuanIndex",
+      component: () =>
+        import(/* webpackChunkName: "about" */ "./daijinjuans/index.vue")
+    },
+    {
+      path: "/daijinjuans/:id",
+      name: "daijinjuanShow",
+      component: () =>
+        import(/* webpackChunkName: "about" */ "./daijinjuans/show.vue")
+    },
+    {
+      path: "/daijinjuans/:id/edit",
+      name: "daijinjuanEdit",
+      component: () =>
+        import(/* webpackChunkName: "about" */ "./daijinjuans/edit.vue")
     }
   ]
 });

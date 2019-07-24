@@ -1,35 +1,27 @@
 <template>
   <Row type="flex" :gutter="16">
     <Col :span="24">
-    标题：
-      <Input search v-model="query" @on-search="search" style="width:200px" small></Input>
-    </Col>
-    <Divider />
-    <Col :span="24">
-      <Table border stripe :columns="columns" :data="tuangous"></Table>
+      <Table border stripe :columns="columns" :data="daijinjuans"></Table>
     </Col>
   </Row>
 </template>
 <script>
-import { Row, Col, Table, Input, Divider } from "iview";
+import { Row, Col, Table } from "iview";
 export default {
   components: {
     Row,
     Col,
-    Table,
-    Input,
-    Divider
+    Table
   },
   data() {
     return {
-      query: "",
       columns: [
         {
           title: "id",
           key: "id"
         },
         {
-          title: "团购商户id",
+          title: "代金券id",
           key: "merchant_id"
         },
         {
@@ -65,7 +57,7 @@ export default {
                 {
                   on: {
                     click: () => {
-                      this.$router.push(`/tuangous/${params.row.id}`);
+                      this.$router.push(`/daijinjuans/${params.row.id}`);
                     }
                   }
                 },
@@ -76,7 +68,7 @@ export default {
                 {
                   on: {
                     click: () => {
-                      this.$router.push(`/tuangous/${params.row.id}/edit`);
+                      this.$router.push(`/daijinjuans/${params.row.id}/edit`);
                     }
                   }
                 },
@@ -86,27 +78,13 @@ export default {
           }
         }
       ],
-      tuangous: []
+      daijinjuans:[]
     };
   },
   created() {
-    this.$http.get(`/tuangous`).then(res => {
-      this.tuangous = res.data.tuangous;
+   this.$http.get(`/daijinjuans`).then(res => {
+      this.daijinjuans = res.data.daijinjuans;
     });
-  },
-  methods:{
-    search(){
-      if(this.query == ''){
-        this.$http.get(`/tuangous?query=${this.query}`).then(res =>{
-          this.tuangous = res.data.tuangous
-        })
-      }else{
-        this.tuangous = this.tuangous.filter(val =>{
-          return val.title.includes(this.query)
-        })
-      }
-    }
   }
 };
 </script>
-
