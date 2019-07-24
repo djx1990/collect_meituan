@@ -1,8 +1,12 @@
 <template>
   <Row type="flex" :gutter="16">
+    <Col :span="24"> 
+      城市:
+      <Input search v-model='query' @on-search="search" style="width:200px;margin:20px"></Input>
+      </Col>
     <Col :span='24' >
-      <Button type="primary" small @click="caijiCities">采集城市</Button>
-      <Button small type='error' @click="deleteAll">删除全部</Button>
+      <Button type="primary" small @click="caijiCities" style="margin:20px;margin-left:0px">采集城市</Button>
+      <Button small type='error' @click="deleteAll" style="margin-buttom:20px">删除全部</Button>
     </Col :span='24'>
     <Col>
       <Table border strip :columns="columns" :data="cities" style="width:100%"></Table>
@@ -10,16 +14,18 @@
   </Row>
 </template>
 <script>
-import { Row, Col, Table, Button } from "iview";
+import { Row, Col, Table, Button, Input } from "iview";
 export default {
   components:{
     Row,
     Col,
     Table,
-    Button
+    Button,
+    Input
   },
   data() {
     return {
+      query:'',
       columns: [
         {
           title: "id",
@@ -104,6 +110,17 @@ export default {
           alert(res.data.notice)
         }
       })
+    },
+    search(){
+      if(this.query == ''){
+        this.$http.get(`/cities?query=${this.query}`).then(res =>{
+          this.cities = res.data.cities
+        })
+      }else{
+        this.cities = this.cities.filter(val =>{
+          return val.name.includes(this.query)
+        })
+      }
     }
   }
 };

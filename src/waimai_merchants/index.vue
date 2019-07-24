@@ -19,7 +19,7 @@
     <Col :span="24">
       <Table border stripe :columns="columns" :data="waimai_merchants"></Table>
     </Col>
-    <Col>
+    <Col :span="24">
       <Page
         :total="total"
         :current="current_page"
@@ -27,7 +27,7 @@
         show-elevator
         page-size="10"
         @on-change="page"
-      />
+      /><p>总共{{ total }}条</p>
     </Col>
   </Row>
 </template>
