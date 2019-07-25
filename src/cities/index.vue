@@ -5,7 +5,7 @@
       <Input search v-model='query' @on-search="search" style="width:200px;margin:20px"></Input>
       </Col>
     <Col :span='24' >
-      <Button type="primary" small @click="caijiCities" style="margin:20px;margin-left:0px">采集城市</Button>
+      <Button type="primary" small @click="caijiCities" style="margin:20px; margin-left:0px">采集城市</Button>
       <Button small type='error' @click="deleteAll" style="margin-buttom:20px">删除全部</Button>
     </Col :span='24'>
     <Col>

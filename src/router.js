@@ -79,21 +79,27 @@ const router = new VueRouter({
     },
     {
       path: "/daijinjuans",
-      name: "daijinjuanIndex",
+      name: "daijinjuansIndex",
       component: () =>
         import(/* webpackChunkName: "about" */ "./daijinjuans/index.vue")
     },
     {
       path: "/daijinjuans/:id",
-      name: "daijinjuanShow",
+      name: "daijinjuansShow",
       component: () =>
         import(/* webpackChunkName: "about" */ "./daijinjuans/show.vue")
     },
     {
       path: "/daijinjuans/:id/edit",
-      name: "daijinjuanEdit",
+      name: "daijinjuansEdit",
       component: () =>
         import(/* webpackChunkName: "about" */ "./daijinjuans/edit.vue")
+    },
+    {
+      path: "/ip",
+      name: "ipIndex",
+      component: () =>
+        import(/* webpackChunkName: "about" */ "./ip/index.vue")
     }
   ]
 });

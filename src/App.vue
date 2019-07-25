@@ -80,7 +80,8 @@ export default {
             { name: "外买商家管理", icon: "ios-navigate", to: "/waimai_merchants" },
             { name: "城市", icon: "ios-navigate", to: "/cities" },
             { name: "团购", icon: "md-cart", to: "/tuangous" },
-            { name: "代金券", icon: "md-cart", to: "/daijinjuans" }
+            { name: "代金券", icon: "md-cart", to: "/daijinjuans" },
+            { name: "ip", icon: "md-cart", to: "/ip" }
             ]
         }
       ],
