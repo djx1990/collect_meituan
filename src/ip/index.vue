@@ -33,8 +33,24 @@ export default {
           key: "created_at"
         },
         {
-          title: "",
-          key: ""
+          title: "操作",
+          key: "action",
+          render:(h,params)=>{
+            return h(
+              'div',[
+                h(
+                  'Button',{
+                    on:{
+                      click:()=>{
+                        this.$router.push(`/ip_addresses/${params.row.id}`)
+                      }
+                    }
+                  },
+                  '查看'
+                )
+              ]
+            )
+          }
         }
       ],
       ip_addresses: []

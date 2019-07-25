@@ -100,6 +100,12 @@ const router = new VueRouter({
       name: "ipIndex",
       component: () =>
         import(/* webpackChunkName: "about" */ "./ip/index.vue")
+    },
+    {
+      path: "/ip_addresses/:id",
+      name: "ipShow",
+      component: () =>
+        import(/* webpackChunkName: "about" */ "./ip/show.vue")
     }
   ]
 });
