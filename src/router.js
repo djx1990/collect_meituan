@@ -98,14 +98,12 @@ const router = new VueRouter({
     {
       path: "/ip",
       name: "ipIndex",
-      component: () =>
-        import(/* webpackChunkName: "about" */ "./ip/index.vue")
+      component: () => import(/* webpackChunkName: "about" */ "./ip/index.vue")
     },
     {
       path: "/ip_addresses/:id",
       name: "ipShow",
-      component: () =>
-        import(/* webpackChunkName: "about" */ "./ip/show.vue")
+      component: () => import(/* webpackChunkName: "about" */ "./ip/show.vue")
     },
     {
       path: "/maidans",
@@ -119,6 +117,12 @@ const router = new VueRouter({
       component: () =>
         import(/* webpackChunkName: "about" */ "./maidans/show.vue")
     },
+    {
+      path: "/categories",
+      name: "categoriesIndex",
+      component: () =>
+        import(/* webpackChunkName: "about" */ "./categories/index.vue")
+    }
   ]
 });
 export default router;
