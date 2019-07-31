@@ -106,7 +106,19 @@ const router = new VueRouter({
       name: "ipShow",
       component: () =>
         import(/* webpackChunkName: "about" */ "./ip/show.vue")
-    }
+    },
+    {
+      path: "/maidans",
+      name: "maidansIndex",
+      component: () =>
+        import(/* webpackChunkName: "about" */ "./maidans/index.vue")
+    },
+    {
+      path: "/maidans/:id",
+      name: "maidansShow",
+      component: () =>
+        import(/* webpackChunkName: "about" */ "./maidans/show.vue")
+    },
   ]
 });
 export default router;

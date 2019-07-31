@@ -81,7 +81,8 @@ export default {
             { name: "城市", icon: "ios-navigate", to: "/cities" },
             { name: "团购", icon: "md-cart", to: "/tuangous" },
             { name: "代金券", icon: "md-cart", to: "/daijinjuans" },
-            { name: "ip", icon: "md-cart", to: "/ip" }
+            { name: "ip", icon: "md-cart", to: "/ip" },
+            { name: "买单", icon: "md-cart", to: "/maidans" }
             ]
         }
       ],
