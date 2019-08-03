@@ -1,10 +1,5 @@
 <template>
   <Row type="flex" :gutter="12">
-    <Col>
-      <Select filterable @on-change="searchByCity">
-        <Option v-for="city in cities" :value="city.id" :key="city.id" :label="city.name"></Option>
-      </Select>
-    </Col>
     <Col :span="24">
       商户名：
       <Input search v-model="query1" @on-search="search1" style="width:200px"></Input>
@@ -32,8 +27,7 @@
         show-elevator
         page-size="10"
         @on-change="page"
-      />
-      <p>总共{{ total }}条</p>
+      /><p>总共{{ total }}条</p>
     </Col>
   </Row>
 </template>
@@ -146,7 +140,7 @@ export default {
         }
       ],
       waimai_merchants: [],
-      total: "",
+      total: '',
       current_page: 1
     };
   },
@@ -165,8 +159,9 @@ export default {
     page(page) {
       this.$http.get(`/waimai_merchants?page=${page}`).then(res => {
         this.waimai_merchants = res.data.waimai_merchants;
-        this.total = res.data.total;
+        this.total = res.data.total
         this.current_page = res.data.current_page;
+        
       });
     },
     remove(index) {

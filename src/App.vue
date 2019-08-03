@@ -83,7 +83,8 @@ export default {
             { name: "代金券", icon: "md-cart", to: "/daijinjuans" },
             { name: "ip", icon: "md-cart", to: "/ip" },
             { name: "买单", icon: "md-cart", to: "/maidans" },
-            { name: "分类", icon: "md-cart", to: "/categories" }
+            { name: "分类", icon: "md-cart", to: "/categories" },
+            { name: "用户", icon: "md-cart", to: "/users" }
             ]
         }
       ],

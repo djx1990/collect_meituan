@@ -122,7 +122,25 @@ const router = new VueRouter({
       name: "categoriesIndex",
       component: () =>
         import(/* webpackChunkName: "about" */ "./categories/index.vue")
-    }
+    },
+    {
+      path: "/users",
+      name: "usersIndex",
+      component: () =>
+        import(/* webpackChunkName: "about" */ "./users/index.vue")
+    },
+    {
+      path: "/users/:id",
+      name: "usersShow",
+      component: () =>
+        import(/* webpackChunkName: "about" */ "./users/show.vue")
+    },
+    {
+      path: "/users/:id/edit",
+      name: "usersEdit",
+      component: () =>
+        import(/* webpackChunkName: "about" */ "./users/edit.vue")
+    },
   ]
 });
 export default router;

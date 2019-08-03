@@ -64,7 +64,6 @@ export default {
     searchByCity(value) {
       this.$http.get(`/categories/list?city_id=${value}`).then(res => {
         this.categories = res.data.categories;
-        console.log(this.categories);
       });
     }
   }
