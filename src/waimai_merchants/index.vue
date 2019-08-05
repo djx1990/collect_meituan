@@ -1,21 +1,34 @@
 <template>
   <Row type="flex" :gutter="12">
-    <Col :span="24">
+    <!-- <Col :span="24">
       商户名：
       <Input search v-model="query1" @on-search="search1" style="width:200px"></Input>
+    </Col>-->
+
+    <Col :span="3">
+      <Select filterable @on-change="searchByCity">
+        <Option v-for="city in cities" :value="city.id" :key="city.id" :label="city.name"></Option>
+      </Select>
     </Col>
-    <Select filterable @on-change="searchByCity">
-      <Option v-for="city in cities" :value="city.id" :key="city.id" :label="city.name"></Option>
-    </Select>
-    <Select filterable>
-      <Option
-        v-for="category in categories"
-        :value="category.id"
-        :key="category.id"
-        :label="category.name"
-      ></Option>
-    </Select>
+    <Col :span="3">
+      <Select filterable>
+        <Option
+          v-for="category in categories"
+          :value="category.id"
+          :key="category.id"
+          :label="category.name"
+        ></Option>
+      </Select>
+    </Col>
+    <Col :span="3">
+      <Button type="primary" @click="search">搜索</Button>
+    </Col>
+   
     <Divider dashed />
+     <Col :span="3" offset="21">
+      <Button type="error" @click="deleteAll">删除全部</Button>
+      <Button type="error" @click="export1">导出文本</Button>
+    </Col>
     <Col :span="24">
       <Table border stripe :columns="columns" :data="waimai_merchants"></Table>
     </Col>
@@ -23,16 +36,26 @@
       <Page
         :total="total"
         :current="current_page"
-        show-tatal
+        show-total
         show-elevator
-        page-size="10"
+        :page-size="10"
         @on-change="page"
-      /><p>总共{{ total }}条</p>
+      />
     </Col>
   </Row>
 </template>
 <script>
-import { Row, Col, Table, Page, Input, Divider, Select, Option } from "iview";
+import {
+  Row,
+  Col,
+  Table,
+  Page,
+  Input,
+  Divider,
+  Select,
+  Option,
+  Button
+} from "iview";
 export default {
   components: {
     Row,
@@ -42,7 +65,8 @@ export default {
     Input,
     Divider,
     Select,
-    Option
+    Option,
+    Button
   },
   data() {
     return {
@@ -140,8 +164,12 @@ export default {
         }
       ],
       waimai_merchants: [],
-      total: '',
-      current_page: 1
+      total: "",
+      current_page: 1,
+      value1: {
+        city_id: "",
+        category_id: ""
+      }
     };
   },
   created() {
@@ -152,16 +180,14 @@ export default {
       this.waimai_merchants = res.data.waimai_merchants;
       this.total = res.data.total;
       this.current_page = res.data.current_page;
-      console.log(res.data.total);
     });
   },
   methods: {
     page(page) {
       this.$http.get(`/waimai_merchants?page=${page}`).then(res => {
         this.waimai_merchants = res.data.waimai_merchants;
-        this.total = res.data.total
+        this.total = res.data.total;
         this.current_page = res.data.current_page;
-        
       });
     },
     remove(index) {
@@ -177,6 +203,21 @@ export default {
           }
         });
     },
+    deleteAll() {
+      this.$http.delete(`/waimai_merchants/deleteall`).then(res => {
+        if (res.data.status === 1) {
+          this.waimai_merchants = [];
+          alert(res.data.notice);
+        }
+      });
+    },
+    export1(){
+      this.$http.get(`/waimai_merchants/export_excel`).then(res =>{
+        if(res.data.status === 1){
+          alert(res.data.notice)
+        }
+      })
+    },
     search1() {
       if (this.query1 == "") {
         this.$http.get(`/waimai_merchants?query1=${this.query1}`).then(res => {
@@ -188,12 +229,13 @@ export default {
         });
       }
     },
+
     searchByCity(value) {
-      this.$http.get(`/categories/list?city_id=${value}`).then(res => {
+      this.$http.get(`/categories?city_id=${value}`).then(res => {
         this.categories = res.data.categories;
         console.log(this.categories);
       });
-    }
+    },
     // get_selected() {
     //   let cities1 = this.cities.map(item => {
     //     return {
@@ -216,6 +258,13 @@ export default {
     //     }, 200);
     //   }
     // }
+    search() {
+      this.$http
+        .get(`/categories?city_id=&category_id=${this.value}`)
+        .then(res => {
+          this.waimai_merchants = res.dasta.waimai_merchants;
+        });
+    }
   }
 };
 </script>
