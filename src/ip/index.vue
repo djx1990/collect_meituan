@@ -7,16 +7,20 @@
     <Col :span="24">
       <Table border stripe :columns="columns" :data="ip_addresses"></Table>
     </Col>
+    <Col :span="24">
+      <Page :total="total" :current="current_page" show-total show-elevator @on-change="page" />
+    </Col>
   </Row>
 </template>
 <script>
-import { Row, Col, Table, Button } from "iview";
+import { Row, Col, Table, Button, Page } from "iview";
 export default {
   components: {
     Row,
     Col,
     Table,
-    Button
+    Button,
+    Page
   },
   data() {
     return {
@@ -58,12 +62,16 @@ export default {
           }
         }
       ],
-      ip_addresses: []
+      ip_addresses: [],
+      total: 0,
+      current_page: 1
     };
   },
   created() {
     this.$http.get(`/ip_addresses`).then(res => {
       this.ip_addresses = res.data.ip_addresses;
+      this.total = res.data.total;
+      this.current_page = res.data.current_page;
     });
   },
   methods: {
@@ -84,6 +92,11 @@ export default {
           alert(res.data.notice);
         }
       });
+    },
+    page(page){
+      this.$http.get(`/ip_addresses?page=${page}`).then(res =>{
+        this.ip_addresses = res.data.ip_addresses
+      })
     }
   }
 };

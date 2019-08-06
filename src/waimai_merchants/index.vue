@@ -6,12 +6,12 @@
     </Col>-->
 
     <Col :span="3">
-      <Select filterable @on-change="searchByCity">
+      <Select filterable @on-change="searchByCity" clearable>
         <Option v-for="city in cities" :value="city.id" :key="city.id" :label="city.name"></Option>
       </Select>
     </Col>
     <Col :span="3">
-      <Select filterable>
+      <Select filterable clearable>
         <Option
           v-for="category in categories"
           :value="category.id"
@@ -164,12 +164,8 @@ export default {
         }
       ],
       waimai_merchants: [],
-      total: "",
+      total: 0,
       current_page: 1,
-      value1: {
-        city_id: "",
-        category_id: ""
-      }
     };
   },
   created() {
@@ -186,7 +182,7 @@ export default {
     page(page) {
       this.$http.get(`/waimai_merchants?page=${page}`).then(res => {
         this.waimai_merchants = res.data.waimai_merchants;
-        this.total = res.data.total;
+        // this.total = res.data.total;
         this.current_page = res.data.current_page;
       });
     },
@@ -231,7 +227,7 @@ export default {
     },
 
     searchByCity(value) {
-      this.$http.get(`/categories?city_id=${value}`).then(res => {
+      this.$http.get(`/categories/list?city_id=${value}`).then(res => {
         this.categories = res.data.categories;
         console.log(this.categories);
       });
@@ -258,11 +254,11 @@ export default {
     //     }, 200);
     //   }
     // }
-    search() {
+    search(value) {
       this.$http
-        .get(`/categories?city_id=&category_id=${this.value}`)
+        .get(`/waimai_merchants?categor_id=${value}`)
         .then(res => {
-          this.waimai_merchants = res.dasta.waimai_merchants;
+          this.waimai_merchants = res.data.waimai_merchants;
         });
     }
   }

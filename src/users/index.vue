@@ -1,21 +1,33 @@
 <template>
   <Row type="flex" :gutter="16">
-    <Col>
+    <Col :span='24'>
       <Table border stripe :columns="columns" :data="users"></Table>
+    </Col>
+    <Col :span="24">
+      <Page 
+      :total='total'
+      :current="current_page"
+      show-total
+      show-elevator
+      @on-change="page"
+      />
     </Col>
   </Row>
 </template>
 <script>
-import { Row, Col, Table } from "iview";
+import { Row, Col, Table, Page } from "iview";
 export default {
   components: {
     Row,
     Col,
-    Table
+    Table,
+    Page
   },
   data() {
     return {
       users: [],
+      total:0,
+      current_page:1,
       columns: [
         {
           title: "id",
@@ -75,6 +87,8 @@ export default {
   created() {
     this.$http.get(`/users`).then(res => {
       this.users = res.data.users;
+      this.total = res.data.total
+      this.current_page = res.data.current_page
     });
   },
   methods: {
@@ -86,6 +100,11 @@ export default {
           alert(res.data.notice);
         }
       });
+    },
+    page(page){
+      this.$http.get(`/users?page=${page}`).then(res =>{
+        this.users = res.data.users
+      })
     }
   }
 };

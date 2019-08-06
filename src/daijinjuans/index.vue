@@ -8,17 +8,25 @@
     <Col :span="24">
       <Table border stripe :columns="columns" :data="daijinjuans"></Table>
     </Col>
+    <Page
+    :total="total"
+    :current="current_page"
+    show-total
+    show-elevator
+    @on-change="page"
+    />
   </Row>
 </template>
 <script>
-import { Row, Col, Table, Input, Divider } from "iview";
+import { Row, Col, Table, Input, Divider, Page } from "iview";
 export default {
   components: {
     Row,
     Col,
     Table,
     Input,
-    Divider
+    Divider,
+    Page
   },
   data() {
     return {
@@ -86,12 +94,16 @@ export default {
           }
         }
       ],
-      daijinjuans: []
+      daijinjuans: [],
+      total:0,
+      current_page:1
     };
   },
   created() {
     this.$http.get(`/daijinjuans`).then(res => {
       this.daijinjuans = res.data.daijinjuans;
+      this.total = res.data.total
+      this.current_page = res.data.current_page
     });
   },
   methods: {
@@ -105,6 +117,11 @@ export default {
           return val.title.includes(this.query);
         });
       }
+    },
+    page(page){
+      this.$http.get(`/daijinjuans?page=${page}`).then(res =>{
+        this.daijinjuans = res.data.daijinjuans
+      })
     }
   }
 };

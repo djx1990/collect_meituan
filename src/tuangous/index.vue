@@ -1,24 +1,28 @@
 <template>
   <Row type="flex" :gutter="16">
     <Col :span="24">
-    标题：
+      标题：
       <Input search v-model="query" @on-search="search" style="width:200px" small></Input>
     </Col>
     <Divider />
     <Col :span="24">
       <Table border stripe :columns="columns" :data="tuangous"></Table>
     </Col>
+    <Col :span="24">
+      <Page :total="total" :current="current_page" show-total show-elevator @on-change="page" />
+    </Col>
   </Row>
 </template>
 <script>
-import { Row, Col, Table, Input, Divider } from "iview";
+import { Row, Col, Table, Input, Divider, Page } from "iview";
 export default {
   components: {
     Row,
     Col,
     Table,
     Input,
-    Divider
+    Divider,
+    Page
   },
   data() {
     return {
@@ -86,25 +90,34 @@ export default {
           }
         }
       ],
-      tuangous: []
+      tuangous: [],
+      total: 0,
+      current_page: 1
     };
   },
   created() {
     this.$http.get(`/tuangous`).then(res => {
       this.tuangous = res.data.tuangous;
+      this.total = res.data.total;
+      this.current_page = res.data.current_page;
     });
   },
-  methods:{
-    search(){
-      if(this.query == ''){
-        this.$http.get(`/tuangous?query=${this.query}`).then(res =>{
-          this.tuangous = res.data.tuangous
-        })
-      }else{
-        this.tuangous = this.tuangous.filter(val =>{
-          return val.title.includes(this.query)
-        })
+  methods: {
+    search() {
+      if (this.query == "") {
+        this.$http.get(`/tuangous?query=${this.query}`).then(res => {
+          this.tuangous = res.data.tuangous;
+        });
+      } else {
+        this.tuangous = this.tuangous.filter(val => {
+          return val.title.includes(this.query);
+        });
       }
+    },
+    page(page) {
+      this.$http.get(`/tuangous?page=${page}`).then(res => {
+        this.tuangous = res.data.tuangous;
+      });
     }
   }
 };

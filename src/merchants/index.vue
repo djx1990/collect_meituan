@@ -1,7 +1,7 @@
 <template>
   <Row type="flex" :gitter="24">
     <Row type="flex" :gutter="12">
-      <Col :span="2">城市:</Col>
+      <!-- <Col :span="2">城市:</Col>
       <Col :span="5">
         <Input v-model="query" size="small" search @on-search="search"></Input>
       </Col>
@@ -12,6 +12,24 @@
       <Col :span="2">分类:</Col>
       <Col :span="5">
         <Input v-model="query2" size="small" search @on-search="search2"></Input>
+      </Col>-->
+      <Col :span="10">
+        <Select filterable @on-change="searchByCity" clearable>
+          <Option v-for="city in cities" :value="city.id" :key="city.id" :label="city.name"></Option>
+        </Select>
+      </Col>
+      <Col :span="10">
+        <Select filterable clearable>
+          <Option
+            v-for="category in categories"
+            :value="category.id"
+            :key="category.id"
+            :label="category.name"
+          ></Option>
+        </Select>
+      </Col>
+      <Col :span="4">
+        <Button @click="search">搜索</Button>
       </Col>
       <!-- <Col :span="2">
         <Button type="primary" size="small" @click="search">搜索</Button>
@@ -19,10 +37,12 @@
     </Row>
     <Divider dashed />
     <Row>
-      <Col :span="6">商家列表</Col>
+      <Col :span="6">
+        <h1>商家列表</h1>
+      </Col>
       <Col :span="3" :offset="15">
         <Button type="error" size="small" @click="remove_all">一键删除</Button>
-        <Button type="error" size="small" @click="exportData(1)">导出为Excel</Button>
+        <Button type="error" size="small" @click="export1">导出为Excel</Button>
       </Col>
       <Col :span="24">
         <Table border stripe :columns="columns" :data="merchants" ref="table"></Table>
@@ -30,13 +50,23 @@
     </Row>
     <Row type="flex" :gutter="24">
       <Col :span="24">
-        <Page :total="100" show-elevator @on-change="page"></Page>
+        <Page :total="total" :current="current_page" show-total show-elevator @on-change="page"></Page>
       </Col>
     </Row>
   </Row>
 </template>
 <script>
-import { Table, Row, Col, Input, Button, Divider, Page } from "iview";
+import {
+  Table,
+  Row,
+  Col,
+  Input,
+  Button,
+  Divider,
+  Page,
+  Select,
+  Option
+} from "iview";
 export default {
   components: {
     Table,
@@ -45,7 +75,9 @@ export default {
     Input,
     Button,
     Divider,
-    Page
+    Page,
+    Select,
+    Option
   },
   data() {
     return {
@@ -141,12 +173,21 @@ export default {
           }
         }
       ],
-      merchants: []
+      merchants: [],
+      total: 0,
+      current_page:1,
+      cities: [],
+      categories: []
     };
   },
   created() {
+    this.$http.get(`/cities/list`).then(res => {
+      this.cities = res.data.cities;
+    });
     this.$http.get("/merchants").then(res => {
       this.merchants = res.data.merchants;
+      this.total = res.data.total;
+      this.current_page = res.data.current_page
     });
   },
   methods: {
@@ -174,54 +215,69 @@ export default {
           this.merchants = [];
           alert(res.data.notice);
         } else {
-          alert(res.data.notice);
+          -alert(res.data.notice);
         }
       });
     },
-    exportData(type) {
-      if (type === 1) {
-        this.$refs.table.exportCsv({
-          filename: "the original data"
-        });
-      }
+    export1() {
+      // if (type === 1) {
+      //   this.$refs.table.exportCsv({
+      //     filename: "the original data"
+      //   });
+      // }
+      this.$http.get(`/merchants/export_excel`).then(res =>{
+        if(res.data.status === 1){
+          alert(res.data.notice)
+        }
+      })
     },
     page(page) {
       this.$http.get(`/merchants?page=${page}`).then(res => {
         this.merchants = res.data.merchants;
       });
     },
-    search() {
-      if (this.query == "") {
-        this.$http.get(`/merchants?query=${this.query}`).then(res => {
-          this.merchants = res.data.merchants;
-        });
-      } else {
-        this.merchants = this.merchants.filter(val => {
-          return val.city_name.includes(this.query);
-        });
-      }
+    // search() {
+    //   if (this.query == "") {
+    //     this.$http.get(`/merchants?query=${this.query}`).then(res => {
+    //       this.merchants = res.data.merchants;
+    //     });
+    //   } else {
+    //     this.merchants = this.merchants.filter(val => {
+    //       return val.city_name.includes(this.query);
+    //     });
+    //   }
+    // },
+    // search2() {
+    //   if (this.query2 == "") {
+    //     this.$http.get(`/merchants?query2=${this.query2}`).then(res => {
+    //       this.merchants = res.data.merchants;
+    //     });
+    //   } else {
+    //     this.merchants = this.merchants.filter(val => {
+    //       return val.catename.includes(this.query2);
+    //     });
+    //   }
+    // },
+    // search1() {
+    //   if (this.query1 == "") {
+    //     this.$http.get(`/merchants?query2=${this.query1}`).then(res => {
+    //       this.merchants = res.data.merchants;
+    //     });
+    //   } else {
+    //     this.merchants = this.merchants.filter(val => {
+    //       return val.name.includes(this.query1);
+    //     });
+    //   }
+    // },
+    searchByCity(value) {
+      this.$http.get(`/categories/list?city_id=${value}`).then(res => {
+        this.categories = res.data.categories;
+      });
     },
-    search2() {
-      if (this.query2 == "") {
-        this.$http.get(`/merchants?query2=${this.query2}`).then(res => {
-          this.merchants = res.data.merchants;
-        });
-      } else {
-        this.merchants = this.merchants.filter(val => {
-          return val.catename.includes(this.query2);
-        });
-      }
-    },
-    search1() {
-      if (this.query1 == "") {
-        this.$http.get(`/merchants?query2=${this.query1}`).then(res => {
-          this.merchants = res.data.merchants;
-        });
-      } else {
-        this.merchants = this.merchants.filter(val => {
-          return val.name.includes(this.query1);
-        });
-      }
+    search(value) {
+      this.$http.get(`/merchants?category_id=${value}`).then(res => {
+        this.merchants = res.data.merchants;
+      });
     }
   }
 };

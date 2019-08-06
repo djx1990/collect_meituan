@@ -12,10 +12,18 @@
     <Col>
       <Table border strip :columns="columns" :data="cities" style="width:100%"></Table>
     </Col>
+    <Col :span='24'>
+      <Page 
+        :total='total'
+        show-total
+        show-elevator
+        @on-change="page"
+      />
+    </Col>
   </Row>
 </template>
 <script>
-import { Row, Col, Table, Button, Input, Divider } from "iview";
+import { Row, Col, Table, Button, Input, Divider, Page } from "iview";
 export default {
   components:{
     Row,
@@ -23,7 +31,8 @@ export default {
     Table,
     Button,
     Input,
-    Divider
+    Divider,
+    Page
   },
   data() {
     return {
@@ -78,12 +87,14 @@ export default {
           }
         }
       ],
-      cities: []
+      cities: [],
+      total:0
     };
   },
   created() {
     this.$http.get(`/cities`).then(res => {
       this.cities = res.data.cities;
+      this.total = res.data.total
     });
   },
   methods:{
@@ -123,6 +134,11 @@ export default {
           return val.name.includes(this.query)
         })
       }
+    },
+    page(){
+      this.$http.get(`/cities?page=${page}`).then(res =>{
+        this.cities = res.data.cities
+      })
     }
   }
 };
