@@ -1,7 +1,7 @@
 <template>
- <!-- <div v-if="this.$route.matched.some(record => record.meta.layout === false)">
+ <div v-if="this.$route.matched.some(record => record.meta.layout === false)">
     <router-view></router-view>
- </div> -->
+ </div>
  <div class="layout" v-else>
     <Sider :style="{position: 'fixed', height: '100vh', left: 0, overflow: 'auto'}">
 
