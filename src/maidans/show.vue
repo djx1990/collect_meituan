@@ -40,7 +40,7 @@ export default {
     };
   },
   created() {
-    this.$http.get(`/maidans/${this.$route.id}`).then(res => {
+    this.$http.get(`/maidans/${this.$route.params.id}`).then(res => {
       console.log(res);
       this.maidan = res.data.maidan;
     });

@@ -222,6 +222,16 @@ const router = new VueRouter({
         import(/* webpackChunkName: "about" */ "./users/index.vue")
     },
     {
+      path: "/users/login",
+      name: "usersLogin",
+      meta: {
+        layout: false,
+        requiresAuth: false
+      },
+      component: () =>
+        import(/* webpackChunkName: "about" */ "./users/login.vue")
+    },
+    {
       path: "/users/:id",
       name: "usersShow",
       meta: {
@@ -242,16 +252,6 @@ const router = new VueRouter({
         import(/* webpackChunkName: "about" */ "./users/edit.vue")
     },
     {
-      path: "/users/login",
-      name: "usersLogin",
-      meta: {
-        layout: false,
-        requiresAuth: false
-      },
-      component: () =>
-        import(/* webpackChunkName: "about" */ "./users/login.vue")
-    },
-    {
       path: "/users/add",
       name: "usersAdd",
       meta: {
@@ -262,16 +262,21 @@ const router = new VueRouter({
     }
   ]
 });
-// router.beforeEach((to, from, next) => {
-//   if (to.matched.some(record => record.meta.requiresAuth)) {
-//     // this route requires auth, check if logged in
-//     // if not, redirect to login page.
-//     next({
-//       path: "/users/login",
-//       query: { redirect: to.fullPath }
-//     });
-//   } else {
-//     next();
-//   }
-// });
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    next('/users/login');
+
+    console.log("fdsafds");
+  }else{
+    next()
+  }
+  // if (to.matched.some(record => record.meta.requiresAuth)) {
+  //   // this route requires auth, check if logged in
+  //   // if not, redirect to login page.
+  //   console.log('fdsf')
+  //   next('/users/login');
+  // } else {
+
+  // }
+});
 export default router;
