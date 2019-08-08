@@ -43,6 +43,7 @@ export default {
                   on: {
                     click: () => {
                       this.$router.push(`/maidans/${params.row.id}`);
+                      console.log(params.row.id)
                     }
                   }
                 },

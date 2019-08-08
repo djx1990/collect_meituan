@@ -63,15 +63,15 @@ export default {
   data() {
     return {
       menus:[
-        {
-          name: "后台管理",
-          icon: "ios-navigate",
-        },
-        {
-          name: "导航",
-          icon: "ios-navigate",
-          chilren: [{ name: "控制面版", icon: "ios-navigate", to: "/list" }]
-        },
+        // {
+        //   name: "后台管理",
+        //   icon: "ios-navigate",
+        // },
+        // {
+        //   name: "导航",
+        //   icon: "ios-navigate",
+        //   chilren: [{ name: "控制面版", icon: "ios-navigate", to: "/list" }]
+        // },
         {
           name: "平台管理",
           icon: "ios-navigate",

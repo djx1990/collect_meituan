@@ -19,7 +19,7 @@
         </Select>
       </Col>
       <Col :span="10">
-        <Select filterable clearable>
+        <Select filterable clearable v-model="category.id">
           <Option
             v-for="category in categories"
             :value="category.id"
@@ -142,6 +142,7 @@ export default {
                   on: {
                     click: () => {
                       this.show(params.row.id);
+                      
                     }
                   }
                 },
@@ -175,9 +176,13 @@ export default {
       ],
       merchants: [],
       total: 0,
-      current_page:1,
+      current_page: 1,
       cities: [],
-      categories: []
+      categories: [],
+      category:{
+        id:'',
+        name:''
+      }
     };
   },
   created() {
@@ -187,7 +192,7 @@ export default {
     this.$http.get("/merchants").then(res => {
       this.merchants = res.data.merchants;
       this.total = res.data.total;
-      this.current_page = res.data.current_page
+      this.current_page = res.data.current_page;
     });
   },
   methods: {
@@ -206,8 +211,9 @@ export default {
         }
       });
     },
-    edit(merchant_id) {
-      this.$router.push(`merchants/${merchant_id}/edit`);
+    edit(merchantId) {
+      this.$router.push(`merchants/${merchantId}/edit`);
+      console.log(merchantId,111)
     },
     remove_all() {
       this.$http.delete(`merchants/deleteall`).then(res => {
@@ -225,11 +231,11 @@ export default {
       //     filename: "the original data"
       //   });
       // }
-      this.$http.get(`/merchants/export_excel`).then(res =>{
-        if(res.data.status === 1){
-          alert(res.data.notice)
+      this.$http.get(`/merchants/export_excel`).then(res => {
+        if (res.data.status === 1) {
+          alert(res.data.notice);
         }
-      })
+      });
     },
     page(page) {
       this.$http.get(`/merchants?page=${page}`).then(res => {
@@ -274,10 +280,13 @@ export default {
         this.categories = res.data.categories;
       });
     },
-    search(value) {
-      this.$http.get(`/merchants?category_id=${value}`).then(res => {
-        this.merchants = res.data.merchants;
-      });
+    search() {
+      this.$http
+        .get(`/merchants?city_id=&category_id=${this.category.id || ""}`)
+        .then(res => {
+          this.merchants = res.data.merchants;
+          console.log(this.category.id);
+        });
     }
   }
 };

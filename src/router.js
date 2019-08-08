@@ -18,8 +18,7 @@ const router = new VueRouter({
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
-      component: () =>
-        import(/* webpackChunkName: "about" */ "./App.vue")
+      component: () => import(/* webpackChunkName: "about" */ "./App.vue")
     },
     {
       path: "/merchants",
@@ -242,18 +241,37 @@ const router = new VueRouter({
       component: () =>
         import(/* webpackChunkName: "about" */ "./users/edit.vue")
     },
+    {
+      path: "/users/login",
+      name: "usersLogin",
+      meta: {
+        layout: false,
+        requiresAuth: false
+      },
+      component: () =>
+        import(/* webpackChunkName: "about" */ "./users/login.vue")
+    },
+    {
+      path: "/users/add",
+      name: "usersAdd",
+      meta: {
+        layout: false,
+        requiresAuth: false
+      },
+      component: () => import(/* webpackChunkName: "about" */ "./users/add.vue")
+    }
   ]
 });
-router.beforeEach((to, from, next) => {
-  if (to.matched.some(record => record.meta.requiresAuth)) {
-    // this route requires auth, check if logged in
-    // if not, redirect to login page.
-    next({
-      path: "/users/login",
-      query: { redirect: to.fullPath }
-    });
-  } else {
-    next();
-  }
-});
+// router.beforeEach((to, from, next) => {
+//   if (to.matched.some(record => record.meta.requiresAuth)) {
+//     // this route requires auth, check if logged in
+//     // if not, redirect to login page.
+//     next({
+//       path: "/users/login",
+//       query: { redirect: to.fullPath }
+//     });
+//   } else {
+//     next();
+//   }
+// });
 export default router;

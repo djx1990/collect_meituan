@@ -53,6 +53,7 @@ export default {
                   on: {
                     click: () => {
                       this.$router.push(`/ip_addresses/${params.row.id}`);
+                      console.log(params.row.id)
                     }
                   }
                 },

@@ -11,7 +11,7 @@
       </Select>
     </Col>
     <Col :span="3">
-      <Select filterable clearable>
+      <Select filterable clearable v-model="category.id">
         <Option
           v-for="category in categories"
           :value="category.id"
@@ -75,7 +75,9 @@ export default {
       query1: "",
       citiesFilter: [],
       cities: [],
-      loading: false,
+      category:{
+        id:''
+      },
       columns: [
         {
           title: "ID",
@@ -254,9 +256,9 @@ export default {
     //     }, 200);
     //   }
     // }
-    search(value) {
+    search() {
       this.$http
-        .get(`/waimai_merchants?categor_id=${value}`)
+        .get(`/waimai_merchants?city_id=&categor_id=${this.category.id}||''`)
         .then(res => {
           this.waimai_merchants = res.data.waimai_merchants;
         });
