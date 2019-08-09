@@ -27,22 +27,34 @@ export default {
         password: ""
       },
       ruleInline: {
-        email: [{ requried: true, message: "请输入邮箱账号", trigger: "blur" }],
-        password: [{ requried: true, message: "请输入密码", trigger: "blur" }]
+        email: [{ required: true, message: "请输入邮箱账号", trigger: "blur" }],
+        password: [{ required: true, message: "请输入密码", trigger: "blur" }]
       }
     };
   },
   created() {},
   methods: {
     login() {
+          //   this.$refs[auth].validata(valid => {
+    //     if (valid) {
+    //       this.signln();
+    //       alert('ss')
+    //     } else {
+    //       this.$message.error();
+    //       alert('sadf')
+    //     }
+    //   });
       this.$http.post(`/users/sign_in`, { auth: this.auth }).then(res => {
         let authorization = res.data.jwt;
         if (!authorization) {
           this.$message.error(res.data.notice);
+          
           return;
-        }
+        } 
+        console.log(res,111)
+        this.$router.push(`/App`)
       });
-      this.$router.push(`/App`);
+     
     }
   }
 };

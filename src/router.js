@@ -9,11 +9,30 @@ const router = new VueRouter({
   // base: process.env.BASE_URL,
   routes: [
     {
+      path: "/users/login",
+      name: "usersLogin",
+      meta: {
+        layout: false,
+        requiresAuth: false
+      },
+      component: () =>
+        import(/* webpackChunkName: "about" */ "./users/login.vue")
+    },
+    {
+      path: "/users/add",
+      name: "usersAdd",
+      meta: {
+        layout: false,
+        requiresAuth: false
+      },
+      component: () => import(/* webpackChunkName: "about" */ "./users/add.vue")
+    },
+    {
       path: "/App",
       name: "app",
       meta: {
-        layout: true,
-        requiresAuth: true
+        layout: false,
+        requiresAuth: false
       },
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
@@ -221,16 +240,7 @@ const router = new VueRouter({
       component: () =>
         import(/* webpackChunkName: "about" */ "./users/index.vue")
     },
-    {
-      path: "/users/login",
-      name: "usersLogin",
-      meta: {
-        layout: false,
-        requiresAuth: false
-      },
-      component: () =>
-        import(/* webpackChunkName: "about" */ "./users/login.vue")
-    },
+
     {
       path: "/users/:id",
       name: "usersShow",
@@ -251,22 +261,12 @@ const router = new VueRouter({
       component: () =>
         import(/* webpackChunkName: "about" */ "./users/edit.vue")
     },
-    {
-      path: "/users/add",
-      name: "usersAdd",
-      meta: {
-        layout: false,
-        requiresAuth: false
-      },
-      component: () => import(/* webpackChunkName: "about" */ "./users/add.vue")
-    }
+
   ]
 });
 router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
     next('/users/login');
-
-    console.log("fdsafds");
   }else{
     next()
   }

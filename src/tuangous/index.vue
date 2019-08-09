@@ -70,6 +70,7 @@ export default {
                   on: {
                     click: () => {
                       this.$router.push(`/tuangous/${params.row.id}`);
+                      
                     }
                   }
                 },

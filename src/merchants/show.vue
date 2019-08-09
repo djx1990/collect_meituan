@@ -64,7 +64,7 @@ export default {
     };
   },
   created() {
-    this.$http.get(`/merchants/${this.$route.id}`).then(res => {
+    this.$http.get(`/merchants/${this.$route.params.id}`).then(res => {
       this.merchant = res.data.merchant;
     });
   }

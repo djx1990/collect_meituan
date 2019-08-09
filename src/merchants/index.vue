@@ -211,9 +211,8 @@ export default {
         }
       });
     },
-    edit(merchantId) {
-      this.$router.push(`merchants/${merchantId}/edit`);
-      console.log(merchantId,111)
+    edit(merchant_id) {
+      this.$router.push(`merchants/${merchant_id}/edit`);
     },
     remove_all() {
       this.$http.delete(`merchants/deleteall`).then(res => {

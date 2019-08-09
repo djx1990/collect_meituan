@@ -68,7 +68,7 @@ export default {
                   on:{
                     click:()=>{
                       this.$router.push(`/cities/${params.row.id}`)
-                      console.log(params.row.id)
+                      
                     }
                   }
                 },

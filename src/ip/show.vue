@@ -48,7 +48,7 @@ export default {
     };
   },
   created() {
-    this.$http.get(`/ip_addresses/${this.$route.id}`).then(res => {
+    this.$http.get(`/ip_addresses/${this.$route.params.id}`).then(res => {
       this.ip_address = res.data.ip_address;
       console.log(this.ip_address)
     });
