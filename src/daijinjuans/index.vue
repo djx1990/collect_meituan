@@ -11,6 +11,7 @@
     <Page
     :total="total"
     :current="current_page"
+    :page-size="20"
     show-total
     show-elevator
     @on-change="page"

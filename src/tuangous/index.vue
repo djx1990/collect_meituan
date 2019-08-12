@@ -9,7 +9,7 @@
       <Table border stripe :columns="columns" :data="tuangous"></Table>
     </Col>
     <Col :span="24">
-      <Page :total="total" :current="current_page" show-total show-elevator @on-change="page" />
+      <Page :total="total" :current="current_page" :page-size="20" show-total show-elevator @on-change="page" />
     </Col>
   </Row>
 </template>

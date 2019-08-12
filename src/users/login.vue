@@ -17,6 +17,8 @@
   </div>
 </template>
 <script>
+import { mapActions } from 'vuex'
+
 import { Form, FormItem, Input, Button } from "iview";
 export default {
   components: { Form, FormItem, Input, Button },
@@ -35,27 +37,23 @@ export default {
   created() {},
   methods: {
     login() {
-          //   this.$refs[auth].validata(valid => {
-    //     if (valid) {
-    //       this.signln();
-    //       alert('ss')
-    //     } else {
-    //       this.$message.error();
-    //       alert('sadf')
-    //     }
-    //   });
       this.$http.post(`/users/sign_in`, { auth: this.auth }).then(res => {
         let authorization = res.data.jwt;
         if (!authorization) {
           this.$message.error(res.data.notice);
-          
           return;
         } 
-        console.log(res,111)
-        this.$router.push(`/App`)
+        this.$http.defaults.headers.common['Authorization'] = `Bearer ${authorization}` 
+        this.loadUser().then(() => {
+          console.log('fdsa')
+          this.$router.push('/cities')
+        })
       });
      
-    }
+    },
+    ...mapActions([
+      'loadUser'
+    ]),
   }
 };
 </script>

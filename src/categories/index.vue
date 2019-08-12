@@ -11,7 +11,7 @@
       <Table border stripe :columns="columns" :data="categories"></Table>
     </Col>
     <Col>
-      <Page :total="total" show-total show-elevator :page-size="10" @on-change="page">共{{ total }}条</Page>
+      <Page :total="total" show-total show-elevator :page-size="20" @on-change="page"  />
     </Col>
   </Row>
 </template>

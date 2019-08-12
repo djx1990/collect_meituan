@@ -15,6 +15,8 @@
     <Col :span='24'>
       <Page 
         :total='total'
+        :current="current_page"
+        :page-size="20"
         show-total
         show-elevator
         @on-change="page"
@@ -89,13 +91,15 @@ export default {
         }
       ],
       cities: [],
-      total:0
+      total:0,
+      current_page:1
     };
   },
   created() {
     this.$http.get(`/cities`).then(res => {
       this.cities = res.data.cities;
       this.total = res.data.total
+      this.current_page = res.data.current_page
     });
   },
   methods:{
@@ -136,7 +140,7 @@ export default {
         })
       }
     },
-    page(){
+    page(page){
       this.$http.get(`/cities?page=${page}`).then(res =>{
         this.cities = res.data.cities
       })

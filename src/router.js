@@ -1,6 +1,7 @@
 import Vue from "vue";
 import Router from "vue-router";
 import VueRouter from "vue-router";
+import store from './store'
 
 Vue.use(Router);
 
@@ -26,18 +27,6 @@ const router = new VueRouter({
         requiresAuth: false
       },
       component: () => import(/* webpackChunkName: "about" */ "./users/add.vue")
-    },
-    {
-      path: "/App",
-      name: "app",
-      meta: {
-        layout: false,
-        requiresAuth: false
-      },
-      // route level code-splitting
-      // this generates a separate chunk (about.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "about" */ "./App.vue")
     },
     {
       path: "/merchants",
@@ -266,7 +255,12 @@ const router = new VueRouter({
 });
 router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
-    next('/users/login');
+    console.log(store.state.user)
+    if (store.state.user === null) {
+      next('/users/login');
+    } else {
+      next()
+    }
   }else{
     next()
   }

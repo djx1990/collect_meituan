@@ -4,7 +4,7 @@
       <Table border stripe :columns="columns" :data="maidans"></Table>
     </Col>
     <Col :span="24">
-      <Page :total="total" :current="current_page" show-total show-elevator @on-change="page" />
+      <Page :total="total" :current="current_page" show-total show-elevator @on-change="page" :page-size="20" />
     </Col>
   </Row>
 </template>

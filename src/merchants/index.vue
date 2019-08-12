@@ -50,7 +50,7 @@
     </Row>
     <Row type="flex" :gutter="24">
       <Col :span="24">
-        <Page :total="total" :current="current_page" show-total show-elevator @on-change="page"></Page>
+        <Page :total="total" :current="current_page" :page-size="20" show-total show-elevator @on-change="page" ></Page>
       </Col>
     </Row>
   </Row>
@@ -190,9 +190,11 @@ export default {
       this.cities = res.data.cities;
     });
     this.$http.get("/merchants").then(res => {
+       
       this.merchants = res.data.merchants;
       this.total = res.data.total;
       this.current_page = res.data.current_page;
+     
     });
   },
   methods: {
