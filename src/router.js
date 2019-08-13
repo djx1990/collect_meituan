@@ -254,6 +254,7 @@ const router = new VueRouter({
   ]
 });
 router.beforeEach((to, from, next) => {
+  // const token = store.state.token?store.state.token:window.sessionStorage.getItem("token")
   if (to.matched.some(record => record.meta.requiresAuth)) {
     console.log(store.state.user)
     if (store.state.user === null) {

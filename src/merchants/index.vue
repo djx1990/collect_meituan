@@ -42,7 +42,8 @@
       </Col>
       <Col :span="3" :offset="15">
         <Button type="error" size="small" @click="remove_all">一键删除</Button>
-        <Button type="error" size="small" @click="export1">导出为Excel</Button>
+        <Button type="error" size="small" @click="export1" v-if="show2">导出为Excel</Button>
+        <Button type="error" size="small" @click="down" v-if="show1">下载Excel</Button>
       </Col>
       <Col :span="24">
         <Table border stripe :columns="columns" :data="merchants" ref="table"></Table>
@@ -50,7 +51,14 @@
     </Row>
     <Row type="flex" :gutter="24">
       <Col :span="24">
-        <Page :total="total" :current="current_page" :page-size="20" show-total show-elevator @on-change="page" ></Page>
+        <Page
+          :total="total"
+          :current="current_page"
+          :page-size="20"
+          show-total
+          show-elevator
+          @on-change="page"
+        ></Page>
       </Col>
     </Row>
   </Row>
@@ -85,6 +93,8 @@ export default {
       query1: "",
       query2: "",
       merchantsSearch: [],
+      show2: true,
+      show1: false,
       columns: [
         {
           title: "ID",
@@ -142,7 +152,6 @@ export default {
                   on: {
                     click: () => {
                       this.show(params.row.id);
-                      
                     }
                   }
                 },
@@ -179,9 +188,9 @@ export default {
       current_page: 1,
       cities: [],
       categories: [],
-      category:{
-        id:'',
-        name:''
+      category: {
+        id: "",
+        name: ""
       }
     };
   },
@@ -190,11 +199,9 @@ export default {
       this.cities = res.data.cities;
     });
     this.$http.get("/merchants").then(res => {
-       
       this.merchants = res.data.merchants;
       this.total = res.data.total;
       this.current_page = res.data.current_page;
-     
     });
   },
   methods: {
@@ -204,7 +211,9 @@ export default {
     },
     remove(index) {
       let merchant = this.merchants[index];
+
       this.$http.delete(`merchants/${merchant.id}`).then(res => {
+        console.log(111);
         if (res.data.status === 1) {
           this.merchants.splice(index, 1);
           alert(res.data.notice);
@@ -214,29 +223,49 @@ export default {
       });
     },
     edit(merchant_id) {
+      console.log(111);
       this.$router.push(`merchants/${merchant_id}/edit`);
     },
+
     remove_all() {
       this.$http.delete(`merchants/deleteall`).then(res => {
         if (res.data.status === 1) {
           this.merchants = [];
           alert(res.data.notice);
         } else {
-          -alert(res.data.notice);
+          alert(res.data.notice);
         }
       });
     },
-    export1() {
+    export1(city_name) {
+       console.log(city_name,1)
       // if (type === 1) {
       //   this.$refs.table.exportCsv({
       //     filename: "the original data"
       //   });
       // }
-      this.$http.get(`/merchants/export_excel`).then(res => {
-        if (res.data.status === 1) {
-          alert(res.data.notice);
-        }
-      });
+      this.$http
+        .get(`/merchants/export_excel?city_name=${city_name}`)
+        .then(res => {
+          
+          if (res.data.status === 1) {
+            this.show2 = false;
+            this.show1 = true;
+            alert(res.data.notice);
+           
+          }
+        });
+    },
+    down() {
+      this.$http
+        .get(`/merchants/excel_file_path?city_id=${value}`)
+        .then(res => {
+          if (res.data.status === 1) {
+            this.show1 = false;
+            this.show2 = true;
+            alert("正在下载");
+          }
+        });
     },
     page(page) {
       this.$http.get(`/merchants?page=${page}`).then(res => {
@@ -279,6 +308,7 @@ export default {
     searchByCity(value) {
       this.$http.get(`/categories/list?city_id=${value}`).then(res => {
         this.categories = res.data.categories;
+        console.log(this.categories,value)
       });
     },
     search() {

@@ -1,7 +1,9 @@
 <template>
   <Row type="flex" :gutter="2">
-    <Col :span='3'><h2>城市：</h2></Col>
-    <Col :span='5'>
+    <Col :span="3">
+      <h2>城市：</h2>
+    </Col>
+    <Col :span="5">
       <Select filterable @on-change="searchByCity" clearable @on-clear="clear">
         <Option v-for="city in cities" :value="city.id" :key="city.id" :label="city.name"></Option>
       </Select>
@@ -11,7 +13,7 @@
       <Table border stripe :columns="columns" :data="categories"></Table>
     </Col>
     <Col>
-      <Page :total="total" show-total show-elevator :page-size="20" @on-change="page"  />
+      <Page :total="total" show-total show-elevator :page-size="20" @on-change="page" />
     </Col>
   </Row>
 </template>
@@ -64,7 +66,6 @@ export default {
     this.$http.get(`/categories`).then(res => {
       this.categories = res.data.categories;
       this.total = res.data.total;
-      console.log(res.data.total);
     });
     this.$http.get(`/cities`).then(res => {
       this.cities = res.data.cities;
@@ -74,6 +75,7 @@ export default {
     searchByCity(value) {
       this.$http.get(`/categories?city_id=${value}`).then(res => {
         this.categories = res.data.categories;
+        console.log(this.categories, 111);
       });
     },
     clear() {
