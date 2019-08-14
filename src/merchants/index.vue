@@ -19,7 +19,7 @@
         </Select>
       </Col>
       <Col :span="10">
-        <Select filterable clearable v-model="category.id">
+        <Select filterable clearable v-model="category.id" @on-clear="clear" @on-change="searchByCategory">
           <Option
             v-for="category in categories"
             :value="category.id"
@@ -28,9 +28,9 @@
           ></Option>
         </Select>
       </Col>
-      <Col :span="4">
+      <!-- <Col :span="4">
         <Button @click="search">搜索</Button>
-      </Col>
+      </Col> -->
       <!-- <Col :span="2">
         <Button type="primary" size="small" @click="search">搜索</Button>
       </Col>-->
@@ -42,7 +42,7 @@
       </Col>
       <Col :span="3" :offset="15">
         <Button type="error" size="small" @click="remove_all">一键删除</Button>
-        <Button type="error" size="small" @click="export1" v-if="show2">导出为Excel</Button>
+        <Button type="error" size="small" @click="export1" v-if="show2" v-model="city.name">导出为Excel</Button>
         <Button type="error" size="small" @click="down" v-if="show1">下载Excel</Button>
       </Col>
       <Col :span="24">
@@ -191,6 +191,10 @@ export default {
       category: {
         id: "",
         name: ""
+      },
+      city: {
+        id: "",
+        name: ""
       }
     };
   },
@@ -237,28 +241,26 @@ export default {
         }
       });
     },
-    export1(city_name) {
-       console.log(city_name,1)
+    export1() {
       // if (type === 1) {
       //   this.$refs.table.exportCsv({
       //     filename: "the original data"
       //   });
       // }
       this.$http
-        .get(`/merchants/export_excel?city_name=${city_name}`)
+        .get(`/merchants/export_excel?city_name=${this.city.name}`)
         .then(res => {
-          
+          console.log(111, this.city.name);
           if (res.data.status === 1) {
             this.show2 = false;
             this.show1 = true;
             alert(res.data.notice);
-           
           }
         });
     },
     down() {
       this.$http
-        .get(`/merchants/excel_file_path?city_id=${value}`)
+        .get(`/merchants/excel_file_path?city_id=${this.city.id}`)
         .then(res => {
           if (res.data.status === 1) {
             this.show1 = false;
@@ -308,17 +310,29 @@ export default {
     searchByCity(value) {
       this.$http.get(`/categories/list?city_id=${value}`).then(res => {
         this.categories = res.data.categories;
-        console.log(this.categories,value)
+        console.log(this.categories, value);
       });
     },
-    search() {
-      this.$http
-        .get(`/merchants?city_id=&category_id=${this.category.id || ""}`)
-        .then(res => {
-          this.merchants = res.data.merchants;
-          console.log(this.category.id);
-        });
-    }
+    searchByCategory(){
+      this.$http.get(`/merchants?category_id=${this.category.id}`).then(res =>{
+        console.log(this.category.id)
+        this.merchants = res.data.merchants
+      })
+    },
+    clear(){
+      this.$http.get("/merchants").then(res =>{
+        this.merchants = res.data.merchants
+      })
+    },
+    // search() {
+    //   this.$http
+    //     .get(`/merchants?city_id=&category_id=${this.category.id}`)
+    //     .then(res => {
+    //       console.log(this.category.id, 111);
+    //       this.merchants = res.data.merchants;
+    //       console.log(this.category.id, res.data.merchants);
+    //     });
+    // } button按钮
   }
 };
 </script>

@@ -80,17 +80,30 @@ export default {
                 "Button",{
                   on:{
                     click:()=>{
-                      this.caiji(params.row.id)
+                      this.caijishanghu(params.row.id)
                     }
                   }
                 },
-                "采集"
+                "采集商户"
+              ),
+              h(
+                "Button",{
+                  on:{
+                    click:()=>{
+                      this.caijicategories(params.row.id)
+                    }
+                  }
+                },
+                "采集城市分类"
               )
             ])
           }
         }
       ],
       cities: [],
+      city:{
+        id:''
+      },
       total:0,
       current_page:1
     };
@@ -103,8 +116,18 @@ export default {
     });
   },
   methods:{
-    caiji(){
-      this.$http.get(`/cities/${this.$route.id}/collect`).then(res =>{
+    caijicategories(cityId){
+      console.log(cityId,111)
+      this.$http.get(`/categories/cate_collect?city_id=${cityId}`).then(res =>{
+        if(res.data.status){
+          alert(res.data.notice)
+        }
+      })
+    },
+    caijishanghu(cityId){
+      console.log(cityId,111)
+      this.$http.get(`/cities/${cityId}/collect`).then(res =>{
+        console.log(this.cities,111)
        if(res.data.status === 1){
          alert(res.data.notice)
        }else{
