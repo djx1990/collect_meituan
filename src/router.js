@@ -210,6 +210,16 @@ const router = new VueRouter({
         import(/* webpackChunkName: "about" */ "./maidans/show.vue")
     },
     {
+      path: "/categoriescity/:id",
+      name: "categoriescity",
+      meta: {
+        layout: true,
+        requiresAuth: true
+      },
+      component: () =>
+        import(/* webpackChunkName: "about" */ "./categories/categoriescity.vue")
+    },
+    {
       path: "/categories",
       name: "categoriesIndex",
       meta: {
@@ -256,7 +266,6 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   // const token = store.state.token?store.state.token:window.sessionStorage.getItem("token")
   if (to.matched.some(record => record.meta.requiresAuth)) {
-    console.log(store.state.user)
     if (store.state.user === null) {
       next('/users/login');
     } else {

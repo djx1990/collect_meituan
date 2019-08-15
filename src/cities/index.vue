@@ -69,12 +69,13 @@ export default {
                 "Button",{
                   on:{
                     click:()=>{
-                      this.$router.push(`/cities/${params.row.id}`)
-                      
+                      // this.$router.push(`/categories/${city_id}`)
+                      // console.log(city_id)
+                      this.show(params.row.id)
                     }
                   }
                 },
-                '查看'
+                '查看分类'
               ),
               h(
                 "Button",{
@@ -116,8 +117,12 @@ export default {
     });
   },
   methods:{
-    caijicategories(cityId){
+    show(cityId){
+      this.$router.push(`/categoriescity/${cityId}`)
       console.log(cityId,111)
+    },
+    caijicategories(cityId){
+      console.log()
       this.$http.get(`/categories/cate_collect?city_id=${cityId}`).then(res =>{
         if(res.data.status){
           alert(res.data.notice)
@@ -167,7 +172,8 @@ export default {
       this.$http.get(`/cities?page=${page}`).then(res =>{
         this.cities = res.data.cities
       })
-    }
+    },
+
   }
 };
 </script>
