@@ -64,13 +64,13 @@ export default {
   },
   created() {
     this.$http.get(`/categories`).then(res => {
-      this.categories = res.data.categories;
+      // this.categories = res.data.categories;
       this.total = res.data.total;
     });
     this.$http.get(`/cities`).then(res => {
       this.cities = res.data.cities;
     });
-    this.$http.get(`/categories/list?city_id=${this.$route.params.id}`).then(res =>{
+    this.$http.get(`/categories?city_id=${this.$route.params.id}`).then(res =>{
       this.categories = res.data.categories
     })
   },
@@ -81,14 +81,18 @@ export default {
       });
     },
     clear() {
-      this.$http.get(`/categories`).then(res => {
+      // this.$http.get(`/categories`).then(res => {
+      //   this.categories = res.data.categories;
+      // });
+      this.$router.push("/categories").then(res =>{
         this.categories = res.data.categories;
-      });
+      })
     },
     page(page) {
-      this.$http.get(`/categories?page=${page}`).then(res => {
+      this.$http.get(`/categories?city_id=${(this.$route.params.id||"")}&page=${page}`).then(res => {
         this.categories = res.data.categories;
         this.total = res.data.total;
+        this.current_page = res.data.current_page
       });
     }
   }

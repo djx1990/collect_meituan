@@ -1,11 +1,6 @@
 <template>
   <Row type="flex" :gutter="16">
     <h3>查看商家</h3>
-    <Divider /> 
-    <Col :span="24">
-      <p>城市</p>
-      <Input v-model="merchant.city_name"></Input>
-    </Col>
     <Divider />
     <Col :span="24">
       <p>区域</p>
@@ -14,12 +9,12 @@
     <Divider />
     <Col :span="24">
       <p>平均价格</p>
-      <Input  v-model="merchant.avgprice"></Input>
+      <Input v-model="merchant.avgprice"></Input>
     </Col>
     <Divider />
     <Col :span="24">
       <p>平均评分</p>
-      <Input  v-model="merchant.avgscore"></Input>
+      <Input v-model="merchant.avgscore"></Input>
     </Col>
     <Divider />
     <Col :span="24">
@@ -37,14 +32,19 @@
       <Input v-model="merchant.address"></Input>
     </Col>
     <Divider />
-        <Col :span="24">
+    <Col :span="24">
       <p>商家电话</p>
       <Input v-model="merchant.phone"></Input>
     </Col>
     <Divider />
-        <Col :span="24">
+    <Col :span="24">
       <p>商家图片</p>
       <Input v-model="merchant.frontimg"></Input>
+    </Col>
+    <Divider />
+    <Col :span="24">
+      <p>分类名称</p>
+      <Input v-model="merchant.channel"></Input>
     </Col>
     <Divider />
     <Button type="primary" @click="save">保存</Button>
@@ -66,21 +66,21 @@ export default {
     };
   },
   created() {
-    this.$http.get(`/merchants/${this.$route.id}`).then(res => {
+    this.$http.get(`/merchants/${this.$route.params.id}`).then(res => {
       this.merchant = res.data.merchant;
     });
   },
-  methods:{
-  save(){
-    this.$http.put(`merchants/${this.$route.id}`).then(res =>{
-      if(res.data.status === 1){
-        this.$router.push(`/merchants`)
-        alert(res.data.notice)
-      }else{
-        alert(res.data.notice)
-      }
-    })
-  }
+  methods: {
+    save() {
+      this.$http.put(`merchants/${this.$route.params.id}`).then(res => {
+        if (res.data.status === 1) {
+          this.$router.push(`/merchants`);
+          alert(res.data.notice);
+        } else {
+          alert(res.data.notice);
+        }
+      });
+    }
   }
 };
 </script>

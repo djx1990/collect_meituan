@@ -71,11 +71,25 @@ export default {
                     click:()=>{
                       // this.$router.push(`/categories/${city_id}`)
                       // console.log(city_id)
-                      this.show(params.row.id)
+                      this.showCategories(params.row.id)
                     }
                   }
                 },
                 '查看分类'
+              ),
+              h(
+                "Button",
+                {
+                  porps:{
+                    type:'primary'
+                  },
+                  on:{
+                    click:()=>{
+                      this.showMerchants(params.row.id)
+                    } 
+                  }
+                },
+                "查看商家"
               ),
               h(
                 "Button",{
@@ -117,9 +131,12 @@ export default {
     });
   },
   methods:{
-    show(cityId){
+    showCategories(cityId){
       this.$router.push(`/categoriescity/${cityId}`)
       console.log(cityId,111)
+    },
+    showMerchants(cityId){
+      this.$router.push(`/merchantscity/${cityId}`)
     },
     caijicategories(cityId){
       console.log()

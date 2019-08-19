@@ -42,6 +42,19 @@ const router = new VueRouter({
         import(/* webpackChunkName: "about" */ "./merchants/index.vue")
     },
     {
+      path: "/merchantscity/:id",
+      name: "merchantsCity",
+      meta: {
+        layout: true,
+        requiresAuth: true
+      },
+      // route level code-splitting
+      // this generates a separate chunk (about.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () =>
+        import(/* webpackChunkName: "about" */ "./merchants/merchantscity.vue")
+    },
+    {
       path: "/merchants/:id",
       name: "merchantsShow",
       meta: {

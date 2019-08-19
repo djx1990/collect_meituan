@@ -75,7 +75,7 @@ export default {
     searchByCity(value) {
       this.$http.get(`/categories?city_id=${value}`).then(res => {
         this.categories = res.data.categories;
-        console.log(this.categories, 111);
+        console.log(value, 111);
       });
     },
     clear() {
@@ -83,8 +83,8 @@ export default {
         this.categories = res.data.categories;
       });
     },
-    page(page) {
-      this.$http.get(`/categories?page=${page}`).then(res => {
+    page(page,city_id) {
+      this.$http.get(`/categories?city_id=${""}&page=${page}`).then(res => {
         this.categories = res.data.categories;
         this.total = res.data.total;
       });

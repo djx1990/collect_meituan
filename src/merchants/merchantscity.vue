@@ -14,12 +14,18 @@
         <Input v-model="query2" size="small" search @on-search="search2"></Input>
       </Col>-->
       <Col :span="10">
-        <Select filterable @on-change="searchByCity" clearable>
+        <Select filterable @on-change="searchByCity" clearable @on-clear="clear" v-model="city.id">
           <Option v-for="city in cities" :value="city.id" :key="city.id" :label="city.name"></Option>
         </Select>
       </Col>
       <Col :span="10">
-        <Select filterable clearable  @on-clear="clear" @on-change="searchByCategory">
+        <Select
+          filterable
+          clearable
+          v-model="category.id"
+          @on-clear="clear"
+          @on-change="searchByCategory"
+        >
           <Option
             v-for="category in categories"
             :value="category.id"
@@ -30,7 +36,7 @@
       </Col>
       <!-- <Col :span="4">
         <Button @click="search">搜索</Button>
-      </Col> -->
+      </Col>-->
       <!-- <Col :span="2">
         <Button type="primary" size="small" @click="search">搜索</Button>
       </Col>-->
@@ -202,11 +208,25 @@ export default {
     this.$http.get(`/cities/list`).then(res => {
       this.cities = res.data.cities;
     });
-    this.$http.get("/merchants").then(res => {
-      this.merchants = res.data.merchants;
-      this.total = res.data.total;
-      this.current_page = res.data.current_page;
-    });
+    this.$http
+      .get(`/merchants?page=${1}&city_id=${this.$route.params.id}`)
+      .then(res => {
+        this.merchants = res.data.merchants;
+        this.total = res.data.total;
+        this.current_page = res.data.current_page;
+      });//可以用的
+    // this.$http.get(`/merchants?page=${1}&city_id=${""}`).then(res =>{
+    //   if(city_id === this.$route.params.id){
+    //     let that = this
+    //     this.$http.get(`/merchants?page=${1}&city_id=${that.$route.params.id}`).then(res =>{
+    //       this.merchants = res.data.merchants
+    //       this.total= res.data.total
+    //     })
+    //   }else{
+    //     this.merchants = res.data.merchants
+    //     this.total = res.data.total
+    //   }
+    // })
   },
   methods: {
     show(merchant_id) {
@@ -227,10 +247,9 @@ export default {
       });
     },
     edit(merchant_id) {
-      console.log(111,merchant_id);
+      console.log(111, merchant_id);
       this.$router.push(`merchants/${merchant_id}/edit`);
     },
-
     remove_all() {
       this.$http.delete(`merchants/deleteall`).then(res => {
         if (res.data.status === 1) {
@@ -270,9 +289,12 @@ export default {
         });
     },
     page(page) {
-      this.$http.get(`/merchants?page=${page}`).then(res => {
-        this.merchants = res.data.merchants;
-      });
+      this.$http
+        .get(`/merchants?city_id=${this.city.id}&page=${1}`)
+        .then(res => {
+          this.merchants = res.data.merchants;
+          console.log(this.city.id);
+        });
     },
     // search() {
     //   if (this.query == "") {
@@ -308,22 +330,24 @@ export default {
     //   }
     // },
     searchByCity(value) {
+      this.$http.get(`/merchants?page=${1}&city_id=${value}`).then(res => {
+        this.merchants = res.data.merchants;
+      });
       this.$http.get(`/categories/list?city_id=${value}`).then(res => {
         this.categories = res.data.categories;
-        console.log(this.categories, value);
       });
     },
-    searchByCategory(value){
-      this.$http.get(`/merchants?category_id=${value}`).then(res =>{
-        console.log(this.category_id,value)
-        this.merchants = res.data.merchants
-      })
+    searchByCategory(category_id) {
+      this.$http.get(`/merchants?category_id=${this.category.id}`).then(res => {
+        console.log(this.category.id);
+        this.merchants = res.data.merchants;
+      });
     },
-    clear(){
-      this.$http.get("/merchants").then(res =>{
-        this.merchants = res.data.merchants
-      })
-    },
+    clear() {
+      this.$http.get("/merchants").then(res => {
+        this.merchants = res.data.merchants;
+      });
+    }
     // search() {
     //   this.$http
     //     .get(`/merchants?city_id=&category_id=${this.category.id}`)
