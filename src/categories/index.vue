@@ -4,7 +4,7 @@
       <h2>城市：</h2>
     </Col>
     <Col :span="5">
-      <Select filterable @on-change="searchByCity" clearable @on-clear="clear">
+      <Select filterable @on-change="searchByCity" clearable @on-clear="clear" v-model="city.id">
         <Option v-for="city in cities" :value="city.id" :key="city.id" :label="city.name"></Option>
       </Select>
     </Col>
@@ -13,7 +13,14 @@
       <Table border stripe :columns="columns" :data="categories"></Table>
     </Col>
     <Col>
-      <Page :total="total" show-total show-elevator :page-size="20" @on-change="page" />
+      <Page
+        :total="total"
+        show-total
+        show-elevator
+        :page-size="20"
+        @on-change="page"
+        v-model="city.id"
+      />
     </Col>
   </Row>
 </template>
@@ -59,7 +66,10 @@ export default {
       ],
       categories: [],
       cities: [],
-      total: 0
+      total: 0,
+      city: {
+        id: ""
+      }
     };
   },
   created() {
@@ -75,19 +85,24 @@ export default {
     searchByCity(value) {
       this.$http.get(`/categories?city_id=${value}`).then(res => {
         this.categories = res.data.categories;
+        this.total = res.data.total;
         console.log(value, 111);
       });
     },
     clear() {
       this.$http.get(`/categories`).then(res => {
         this.categories = res.data.categories;
-      });
-    },
-    page(page,city_id) {
-      this.$http.get(`/categories?city_id=${""}&page=${page}`).then(res => {
-        this.categories = res.data.categories;
         this.total = res.data.total;
       });
+    },
+    page(page) {
+      this.$http
+        .get(`/categories?city_id=${this.city.id||""}&page=${page}`)
+        .then(res => {
+          this.categories = res.data.categories;
+          this.total = res.data.total;
+          console.log();
+        });
     }
   }
 };

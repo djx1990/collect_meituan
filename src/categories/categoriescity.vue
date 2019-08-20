@@ -4,7 +4,7 @@
       <h2>城市：</h2>
     </Col>
     <Col :span="5">
-      <Select filterable @on-change="searchByCity" clearable @on-clear="clear">
+      <Select filterable @on-change="searchByCity" clearable @on-clear="clear" v-model="city.id">
         <Option v-for="city in cities" :value="city.id" :key="city.id" :label="city.name"></Option>
       </Select>
     </Col>
@@ -59,40 +59,45 @@ export default {
       ],
       categories: [],
       cities: [],
+      city:{
+        id:""
+      },
       total: 0
     };
   },
   created() {
-    this.$http.get(`/categories`).then(res => {
-      // this.categories = res.data.categories;
-      this.total = res.data.total;
-    });
+    // this.$http.get(`/categories`).then(res => {
+    //   // this.categories = res.data.categories;
+    //   this.total = res.data.total;
+    // });
     this.$http.get(`/cities`).then(res => {
       this.cities = res.data.cities;
     });
     this.$http.get(`/categories?city_id=${this.$route.params.id}`).then(res =>{
       this.categories = res.data.categories
+      this.total = res.data.total
     })
   },
   methods: {
     searchByCity(value) {
       this.$http.get(`/categories?city_id=${value}`).then(res => {
         this.categories = res.data.categories;
+        this.total = res.data.total
       });
     },
     clear() {
-      // this.$http.get(`/categories`).then(res => {
-      //   this.categories = res.data.categories;
-      // });
-      this.$router.push("/categories").then(res =>{
+      this.$http.get(`/categories`).then(res => {
         this.categories = res.data.categories;
-      })
+        this.total = res.data.total
+      });
+      // this.$router.push("/categories").then(res =>{
+      //   this.categories = res.data.categories;
+      // })
     },
     page(page) {
-      this.$http.get(`/categories?city_id=${(this.$route.params.id||"")}&page=${page}`).then(res => {
+      this.$http.get(`/categories?city_id=${(this.city.id||"")}&page=${page}`).then(res => {
         this.categories = res.data.categories;
         this.total = res.data.total;
-        this.current_page = res.data.current_page
       });
     }
   }

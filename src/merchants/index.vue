@@ -14,12 +14,12 @@
         <Input v-model="query2" size="small" search @on-search="search2"></Input>
       </Col>-->
       <Col :span="10">
-        <Select filterable @on-change="searchByCity" clearable>
+        <Select filterable @on-change="searchByCity" clearable v-model="city.id">
           <Option v-for="city in cities" :value="city.id" :key="city.id" :label="city.name"></Option>
         </Select>
       </Col>
       <Col :span="10">
-        <Select filterable clearable  @on-clear="clear" @on-change="searchByCategory">
+        <Select filterable clearable @on-change="searchByCategory" v-model="category.id">
           <Option
             v-for="category in categories"
             :value="category.id"
@@ -28,9 +28,9 @@
           ></Option>
         </Select>
       </Col>
-      <!-- <Col :span="4">
+      <Col :span="4">
         <Button @click="search">搜索</Button>
-      </Col> -->
+      </Col>
       <!-- <Col :span="2">
         <Button type="primary" size="small" @click="search">搜索</Button>
       </Col>-->
@@ -227,7 +227,7 @@ export default {
       });
     },
     edit(merchant_id) {
-      console.log(111,merchant_id);
+      console.log(111, merchant_id);
       this.$router.push(`merchants/${merchant_id}/edit`);
     },
 
@@ -270,8 +270,9 @@ export default {
         });
     },
     page(page) {
-      this.$http.get(`/merchants?page=${page}`).then(res => {
+      this.$http.get(`/merchants?city_id=${this.city.id||""}&page=${page}`).then(res => {
         this.merchants = res.data.merchants;
+        this.total = res.data.total
       });
     },
     // search() {
@@ -312,27 +313,30 @@ export default {
         this.categories = res.data.categories;
         console.log(this.categories, value);
       });
+      this.$http.get(`/merchants?city_id=${value}`).then(res => {
+        this.merchants = res.data.merchants;
+        this.total = res.data.total;
+      });
     },
-    searchByCategory(value){
-      this.$http.get(`/merchants?category_id=${value}`).then(res =>{
-        console.log(this.category_id,value)
-        this.merchants = res.data.merchants
-      })
+    searchByCategory() {
+      this.$http.get(`/merchants?category_id=${this.category.id}`).then(res => {
+        this.merchants = res.data.merchants;
+        this.total = res.data.total;
+      });
     },
-    clear(){
-      this.$http.get("/merchants").then(res =>{
-        this.merchants = res.data.merchants
-      })
-    },
-    // search() {
-    //   this.$http
-    //     .get(`/merchants?city_id=&category_id=${this.category.id}`)
-    //     .then(res => {
-    //       console.log(this.category.id, 111);
-    //       this.merchants = res.data.merchants;
-    //       console.log(this.category.id, res.data.merchants);
-    //     });
-    // } button按钮
+    search() {
+      this.$http
+        .get(
+          `/merchants?city_id=${this.city.id || ""}&category_id=${this.category
+            .id || ""}`
+        )
+        .then(res => {
+          console.log(this.category.id, 111);
+          this.merchants = res.data.merchants;
+          this.total = res.data.total;
+          console.log(this.category.id, res.data.merchants);
+        });
+    }
   }
 };
 </script>
