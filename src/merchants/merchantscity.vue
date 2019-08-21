@@ -202,6 +202,7 @@ export default {
     this.$http.get(`/cities/list`).then(res => {
       this.cities = res.data.cities;
     });
+    this.city.id = this.$route.params.id;
     this.$http
       .get(`/merchants?page=${1}&city_id=${this.$route.params.id}`)
       .then(res => {
@@ -328,7 +329,7 @@ export default {
       this.$http.get(`/categories/list?city_id=${value || ""}`).then(res => {
         this.categories = res.data.categories;
       });
-      this.$http.get(`/merchants?page=${page}&city_id=${value}`).then(res => {
+      this.$http.get(`/merchants?city_id=${value}`).then(res => {
         this.merchants = res.data.merchants;
         this.total = res.data.total;
       });

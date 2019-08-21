@@ -241,22 +241,25 @@ export default {
         }
       });
     },
-    export1() {
+    export1(value) {
       // if (type === 1) {
       //   this.$refs.table.exportCsv({
       //     filename: "the original data"
       //   });
       // }
-      this.$http
-        .get(`/merchants/export_excel?city_name=${this.city.name}`)
-        .then(res => {
-          console.log(111, this.city.name);
-          if (res.data.status === 1) {
-            this.show2 = false;
-            this.show1 = true;
-            alert(res.data.notice);
-          }
-        });
+      this.$http.get(`/cities/list?city_name=${value}`).then(res => {
+        console.log(222,value)
+        this.$http
+          .get(`/merchants/export_excel?city_id=${this.city.id}`)
+          .then(res => {
+            console.log(111, this.city.id);
+            if (res.data.status === 1) {
+              this.show2 = false;
+              this.show1 = true;
+              alert(res.data.notice);
+            }
+          });
+      });
     },
     down() {
       this.$http
@@ -270,10 +273,12 @@ export default {
         });
     },
     page(page) {
-      this.$http.get(`/merchants?city_id=${this.city.id||""}&page=${page}`).then(res => {
-        this.merchants = res.data.merchants;
-        this.total = res.data.total
-      });
+      this.$http
+        .get(`/merchants?city_id=${this.city.id || ""}&page=${page}`)
+        .then(res => {
+          this.merchants = res.data.merchants;
+          this.total = res.data.total;
+        });
     },
     // search() {
     //   if (this.query == "") {
@@ -311,7 +316,6 @@ export default {
     searchByCity(value) {
       this.$http.get(`/categories/list?city_id=${value}`).then(res => {
         this.categories = res.data.categories;
-        console.log(this.categories, value);
       });
       this.$http.get(`/merchants?city_id=${value}`).then(res => {
         this.merchants = res.data.merchants;

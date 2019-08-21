@@ -25,7 +25,7 @@
   </Row>
 </template>
 <script>
-import { Row, Col, Table, Button, Input, Divider, Page } from "iview";
+import { Row, Col, Table, Button, Input, Divider, Page, Icon } from "iview";
 export default {
   components:{
     Row,
@@ -34,7 +34,8 @@ export default {
     Button,
     Input,
     Divider,
-    Page
+    Page,
+    Icon
   },
   data() {
     return {
@@ -55,6 +56,23 @@ export default {
         {
           title: "城市拼音",
           key: "citypinyin"
+        },
+        {
+          title: "商家个数",
+          key: 'merchantsNumber',
+          // renderHeader:(h,{column,$index})=>{
+          //   return h( 'div' ,null[
+          //     h( "span",null,""),
+          //     h( 'i' ,{class:"icon-md-arrow-round-down"
+          //         }
+          //     )
+          //   ])
+          // }
+          
+        },
+        {
+          title: "分类个数",
+          key: "categoriesNumber",
         },
         {
           title: "创建时间",
