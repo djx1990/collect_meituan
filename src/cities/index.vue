@@ -10,7 +10,7 @@
       <Button small type='error' @click="deleteAll" style="margin-buttom:20px">删除全部</Button>
     </Col :span='24'>
     <Col>
-      <Table border strip :columns="columns" :data="cities" style="width:100%"></Table>
+      <Table border strip :columns="columns" :data="cities" style="width:100%" @on-sort-change="sort"></Table>
     </Col>
     <Col :span='24'>
       <Page 
@@ -25,17 +25,17 @@
   </Row>
 </template>
 <script>
-import { Row, Col, Table, Button, Input, Divider, Page, Icon } from "iview";
+import { Icon, Row, Col, Table, Button, Input, Divider, Page} from "iview";
 export default {
   components:{
+    Icon,
     Row,
     Col,
     Table,
     Button,
     Input,
     Divider,
-    Page,
-    Icon
+    Page
   },
   data() {
     return {
@@ -58,21 +58,55 @@ export default {
           key: "citypinyin"
         },
         {
-          title: "商家个数",
-          key: 'merchantsNumber',
-          // renderHeader:(h,{column,$index})=>{
-          //   return h( 'div' ,null[
-          //     h( "span",null,""),
-          //     h( 'i' ,{class:"icon-md-arrow-round-down"
+          title: "商家数量",
+          key: 'merchants_count',
+          sortable: 'custom',
+          filters:[
+            {
+              label:"0-200",
+              value:1
+            },
+            {
+              label:"201-999",
+              value:2
+            },
+            {
+              label:">1000",
+              value:3
+            }
+          ],
+          filterMultiple: false,
+          filterMethod(value, row){
+            if( value === 1 ){
+              return row.merchants_count <= 200
+            }else if ( value === 2 ){
+              return 201 <= row.merchnats_count <= 999
+            }else if( value === 3 ){
+              return row.merchants_count >= 1000
+            }
+          },
+          // filterRemote(value){
+          //   console.log(value,111)
+          //   this.$http.get(`/cities?min=${}`)
+          // }
+          // renderHeader:(h,params)=>{
+          //   return h('span',[
+          //     h(
+          //       'button',{
+          //         on:{
+          //          click:()=>{
+          //            this.merchantsUp(params.index)
+          //          } 
           //         }
-          //     )
+          //       },'up'),
+          //     h("strong",params.column.title)
           //   ])
           // }
-          
         },
         {
-          title: "分类个数",
-          key: "categoriesNumber",
+          title: "分类数量",
+          key: "categories_count",
+          sortable:"custom"
         },
         {
           title: "创建时间",
@@ -208,8 +242,23 @@ export default {
         this.cities = res.data.cities
       })
     },
-
-  }
+    sort(column){
+      console.log(column)
+      console.log(column.key, 111)
+      console.log(column.order)
+      if(column.key == 'merchants_count'){
+        console.log(column.key, 111)
+        this.$http.get(`/cities?merchants_order=${column.order}`).then(res =>{
+          this.cities = res.data.cities
+        })
+      }else if(column.key == 'categories_count'){
+        console.log(column.key, 111)
+        this.$http.get(`/cities?categories_order=${column.order}`).then(res =>{
+          this.cities = res.data.cities
+        })
+      }
+    },
+  },
 };
 </script>
 
