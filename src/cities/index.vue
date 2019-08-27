@@ -9,6 +9,28 @@
       <Button type="primary" small @click="caijiCities" style="margin:20px; margin-left:0px">采集城市</Button>
       <Button small type='error' @click="deleteAll" style="margin-buttom:20px">删除全部</Button>
     </Col :span='24'>
+    <Col :span='3'>商户数量：</Col>
+    <Col :span="4">
+      <Select size='small' filterable @on-change="searchByMerchantsCount" clearable v-model="merchantCount" @on-clear="clearMerchantsCount">
+        <Option 
+        v-for="(merchant_count, index) in merchant_counts" 
+        :value="merchant_count.value" 
+        :key="merchant_count.value" 
+        :label="merchant_count.lable">
+        </Option>
+      </Select> 
+    </Col>
+    <Col :span='3'>分类数量：</Col>
+    <Col :span="4">
+      <Select size='small' filterable @on-change="searchByCategoryCount" clearable v-model="categoryCount" @on-clear="clearCategoryCount">
+        <Option 
+        v-for="category_count in category_counts" 
+        :value="category_count.value" 
+        :key="category_count.value" 
+        :label="category_count.lable">
+        </Option>
+      </Select> 
+    </Col>
     <Col>
       <Table border strip :columns="columns" :data="cities" style="width:100%" @on-sort-change="sort"></Table>
     </Col>
@@ -25,7 +47,7 @@
   </Row>
 </template>
 <script>
-import { Icon, Row, Col, Table, Button, Input, Divider, Page} from "iview";
+import { Icon, Row, Col, Table, Button, Input, Select, Option, Divider, Page} from "iview";
 export default {
   components:{
     Icon,
@@ -34,11 +56,43 @@ export default {
     Table,
     Button,
     Input,
+    Select,
+    Option,
     Divider,
     Page
   },
   data() {
     return {
+      merchantCount: '',
+      merchant_counts:[
+        {
+          value: 1,
+          lable: "0-200"
+        },
+        {
+          value: 2,
+          lable: '200-999'
+        },
+        {
+          value: 3,
+          lable: '1000-10000'
+        }
+      ],
+      categoryCount:'',
+      category_counts:[
+        {
+          value: 1,
+          lable: "0-99"
+        },
+        {
+          value: 2,
+          lable: '100-199'
+        },
+        {
+          value: 3,
+          lable: '200-1000'
+        }
+      ],
       query:'',
       columns: [
         {
@@ -61,34 +115,20 @@ export default {
           title: "商家数量",
           key: 'merchants_count',
           sortable: 'custom',
-          filters:[
-            {
-              label:"0-200",
-              value:1
-            },
-            {
-              label:"201-999",
-              value:2
-            },
-            {
-              label:">1000",
-              value:3
-            }
-          ],
-          filterMultiple: false,
-          filterMethod(value, row){
-            if( value === 1 ){
-              return row.merchants_count <= 200
-            }else if ( value === 2 ){
-              return 201 <= row.merchnats_count <= 999
-            }else if( value === 3 ){
-              return row.merchants_count >= 1000
-            }
-          },
-          // filterRemote(value){
-          //   console.log(value,111)
-          //   this.$http.get(`/cities?min=${}`)
-          // }
+          // filters:[
+          //   {
+          //     label:"0-200",
+          //     value:1
+          //   },
+          //   {
+          //     label:"201-999",
+          //     value:2
+          //   },
+          //   {
+          //     label:">1000",
+          //     value:3
+          //   }
+          // ],
           // renderHeader:(h,params)=>{
           //   return h('span',[
           //     h(
@@ -258,6 +298,46 @@ export default {
         })
       }
     },
+    searchByMerchantsCount(){
+      if(this.merchantCount == 1){
+        this.$http.get(`/cities?merchants_min=${0}&merchants_max=${200}`).then(res =>{
+          this.cities = res.data.cities
+        }) 
+      }else if(this.merchantCount == 2){
+        this.$http.get(`/cities?merchants_min=${201}&merchants_max=${999}`).then(res =>{
+          this.cities = res.data.cities
+        })
+      }else if(this.merchantCount == 3){
+        this.$http.get(`/cities?merchants_min=${1000}&merchants_max=${10000}`).then(res =>{
+          this.cities = res.data.cities
+        })
+      }  
+    },
+    clearMerchantsCount(){
+      this.$http.get('/cities').then(res =>{
+        this.cities = res.data.cities
+      })
+    },
+    searchByCategoryCount(){
+      if(this.categoryCount === 1){
+        this.$http.get(`/cities?categories_min=${0}&categories_max=${99}`).then(res =>{
+          this.cities = res.data.cities
+        })
+      }else if(this.categoryCount === 2){
+        this.$http.get(`/cities?categories_min=${100}&categories_max=${199}`).then(res =>{
+          this.cities = res.data.cities
+        })
+      }else if(this.categoryCount === 3){
+        this.$http.get(`/cities?categories_min=${200}&categories_max=${1000}`).then(res =>{
+          this.cities = res.data.cities
+        })
+      }
+    },
+    clearCategoryCount(){
+      this.$http.get('/cities').then(res =>{
+        this.cities = res.data.cities
+      })
+    } 
   },
 };
 </script>
