@@ -3,19 +3,34 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import axios from 'axios'
-import cookies from "vue-cookies"
+import VueCookie from 'vue-cookies'
+Vue.use(VueCookie)
+
+
 import 'iview/dist/styles/iview.css';
 
 
 Vue.config.productionTip = false
-
+Vue.prototype.$cookie = VueCookie;
 Vue.prototype.$http = axios.create({
   baseURL:
+  // "http://192.168.101.24:3000/api/v1/admin" 
+  // 磊哥接口
    "http://192.168.101.9:3000/api/v1/admin"
+  //  老黄接口
     // "https://mockapi.eolinker.com/FbVf4MH0a082b35420706ebbe5770bcacd13a40e3c1a6bd"
 });
+axios.interceptors.response.use(function (response) {
+  return response
+}, function (error) {
+  console.log(error.response.data)
+  if (error.response.data.error.statusCode === 401) {
+    store.dispatch('logout')
+    router.push('/login')
+  }
+  return Promise.reject(error)
+})
 new Vue({
-  cookies,
   router,
   store,
   render: h => h(App)

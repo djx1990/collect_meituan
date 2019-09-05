@@ -63,6 +63,7 @@ export default {
   },
   data() {
     return {
+      showCitiesCollect: "false",
       merchantCount: '',
       merchant_counts:[
         {
@@ -159,6 +160,7 @@ export default {
             return h('div',[
               h(
                 "Button",{
+
                   on:{
                     click:()=>{
                       // this.$router.push(`/categories/${city_id}`)
@@ -337,7 +339,7 @@ export default {
       this.$http.get('/cities').then(res =>{
         this.cities = res.data.cities
       })
-    } 
+    },
   },
 };
 </script>

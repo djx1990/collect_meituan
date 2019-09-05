@@ -1,8 +1,9 @@
 import Vue from "vue";
 import Router from "vue-router";
 import VueRouter from "vue-router";
-import store from './store'
-
+import store from "./store";
+import VueCookie from "vue-cookies";
+Vue.use(VueCookie);
 Vue.use(Router);
 
 const router = new VueRouter({
@@ -230,7 +231,9 @@ const router = new VueRouter({
         requiresAuth: true
       },
       component: () =>
-        import(/* webpackChunkName: "about" */ "./categories/categoriescity.vue")
+        import(
+          /* webpackChunkName: "about" */ "./categories/categoriescity.vue"
+        )
     },
     {
       path: "/categories",
@@ -272,21 +275,31 @@ const router = new VueRouter({
       },
       component: () =>
         import(/* webpackChunkName: "about" */ "./users/edit.vue")
-    },
-
+    }
   ]
 });
 router.beforeEach((to, from, next) => {
   // const token = store.state.token?store.state.token:window.sessionStorage.getItem("token")
   if (to.matched.some(record => record.meta.requiresAuth)) {
-    if (store.state.user === null) {
-      next('/users/login');
+    console.log(VueCookie);
+    let cookie = VueCookie.get("user");
+    console.log(cookie);
+    if (cookie !== null) {
+      Vue.prototype.$http.defaults.headers.common["Authorization"] = `Bearer ${cookie}`;
+      console.log(Vue.prototype.$http.defaults.headers, 11);
+      next();
     } else {
-      next()
+      if (store.state.user === null) {
+        next("/users/login");
+      } else {
+        next();
+      }
     }
-  }else{
-    next()
+  } else {
+    next();
   }
+
+  // }
   // if (to.matched.some(record => record.meta.requiresAuth)) {
   //   // this route requires auth, check if logged in
   //   // if not, redirect to login page.

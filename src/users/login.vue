@@ -3,14 +3,13 @@
     <Form ref="auth" :model="auth" :rules="ruleInline" :label-width="300">
       <FormItem prop="email">
         账号：
-        <Input type="text" v-model="auth.email" placeholder="请输入您的邮箱账号"></Input>
+        <Input type="text" v-model="auth.email" placeholder="请输入您的邮箱账号" @on-enter="login(auth)"></Input>
       </FormItem>
       <FormItem prop="password">
         密码：
-        <Input type="password" v-model="auth.password" @keyup.enter.native="submitForm(auth)"></Input>
+        <Input type="password" v-model="auth.password" @on-enter="login(auth)"></Input>
       </FormItem>
       <FormItem>
-         <Checkbox v-model="checked">记住密码</Checkbox>
         <Button type="primary" long @click="login(auth)">登录</Button>
         <Button type="primary" long to="/users/add">注册</Button>
       </FormItem>
@@ -19,13 +18,14 @@
 </template>
 <script>
 import { mapActions } from "vuex";
-import cookie from "vue-cookies"
+// import cookie from "vue-cookies";
+// import { setCookies, getCookies} from "./cookie.js"
 import { Form, FormItem, Input, Button, Checkbox } from "iview";
 export default {
   components: { Form, FormItem, Input, Button, Checkbox },
   data() {
     return {
-      checked:false,
+      checked: false,
       auth: {
         email: "",
         password: ""
@@ -33,33 +33,24 @@ export default {
       ruleInline: {
         email: [{ required: true, message: "请输入邮箱账号", trigger: "blur" }],
         password: [{ required: true, message: "请输入密码", trigger: "blur" }]
-      },
-      
+      }
     };
   },
   created() {},
-  mounted() {
-    this.getCookie();
-  },
+  mounted() {},
   methods: {
-    login(formName) {
-      
-      if (this.checked == true) {
-        console.log("checked == true");
-        this.setCookie(this.auth.email, this.auth.password);
-      } else {
-        console.log("清空缓存");
-        this.clearCookie;
-      }
+    login() {
       this.$http.post(`/users/sign_in`, { auth: this.auth }).then(res => {
         let authorization = res.data.jwt;
         if (!authorization) {
           this.$message.error(res.data.notice);
           return;
         }
-        // else{
-        //   $this.$http.commit("SET_TOKEN",res.data.return.session_id)
-        // }
+        this.$cookie.config("7h");
+        this.$cookie.set("user", authorization, { expires: 7 });
+        console.log("cookie", authorization);
+        let ema = this.$cookie.get("user");
+        console.log("user", ema);
         this.$http.defaults.headers.common[
           "Authorization"
         ] = `Bearer ${authorization}`;
@@ -68,32 +59,6 @@ export default {
           this.$router.push("/cities");
         });
       });
-    },
-    setCookie(c_email, c_password, exdays) {
-      let exdate = new Date();
-      exdate.setTime(exdate.getTime() + 24 * 60 * 60 * 1000 * exdays);
-      window.document.cookie =
-        "authEmail" + "=" + c_email + ";path=/expires=" + exdate.toGMTString();
-      window.documnet.cookie =
-        "authPassword" +
-        "=" +
-        c_password +
-        ";path=/expires" +
-        exdate.toGMTString();
-    },
-    getCookie() {
-      if (document.cookie.length > 0) {
-        let arr = document.cookie.split(';');
-        console(arr)
-        for( var i = 0; i<arr; i++){
-          let arr2 = arr[i].split('=');
-          if(arr2[0] == "authEmail"){
-            this.auth.email = arr[1]
-          }else if(arr2[0] == "authPassword"){
-            this.auth.password = arr2[1]  
-          }
-        }
-      }
     },
     ...mapActions(["loadUser"])
   }
