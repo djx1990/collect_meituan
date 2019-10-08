@@ -46,6 +46,7 @@ export default {
           this.$message.error(res.data.notice);
           return;
         }
+
         this.$cookie.config("7h");
         this.$cookie.set("user", authorization, { expires: 7 });
         console.log("cookie", authorization);

@@ -32,7 +32,13 @@
       </Select> 
     </Col>
     <Col>
-      <Table border strip :columns="columns" :data="cities" style="width:100%" @on-sort-change="sort"></Table>
+      <Table 
+      border 
+      strip 
+      :columns= "columns" 
+      :data= "cities" 
+      style= "width:100%"
+      @on-sort-change="sort"></Table>
     </Col>
     <Col :span='24'>
       <Page 
@@ -160,7 +166,6 @@ export default {
             return h('div',[
               h(
                 "Button",{
-
                   on:{
                     click:()=>{
                       // this.$router.push(`/categories/${city_id}`)
@@ -174,7 +179,7 @@ export default {
               h(
                 "Button",
                 {
-                  porps:{
+                  props:{
                     type:'primary'
                   },
                   on:{

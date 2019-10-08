@@ -43,7 +43,7 @@
       <Col :span="3" :offset="15">
         <Button type="error" size="small" @click="remove_all">一键删除</Button>
         <Button type="error" size="small" @click="export1" v-if="show2" v-model="city.name">导出为Excel</Button>
-        <Button type="error" size="small" @click="down" v-if="show1">下载Excel</Button>
+        <Button type="error" size="small" @click="down" v-if="show1" v-model="city.name">下载Excel</Button>
       </Col>
       <Col :span="24">
         <Table border stripe :columns="columns" :data="merchants" ref="table"></Table>
@@ -147,7 +147,7 @@ export default {
                 "Button",
                 {
                   props: {
-                    type: "parime"
+                    type: "primary"
                   },
                   on: {
                     click: () => {
@@ -226,7 +226,7 @@ export default {
   methods: {
     show(merchant_id) {
       console.log(merchant_id);
-      this.$router.push(`merchants/${merchant_id}`);
+      this.$router.push(`/merchants/${merchant_id}`);
     },
     remove(index) {
       let merchant = this.merchants[index];
@@ -243,7 +243,7 @@ export default {
     },
     edit(merchant_id) {
       console.log(111, merchant_id);
-      this.$router.push(`merchants/${merchant_id}/edit`);
+      this.$router.push(`/merchants/${merchant_id}/edit`);
     },
     remove_all() {
       this.$http.delete(`merchants/deleteall`).then(res => {
@@ -261,22 +261,23 @@ export default {
       //     filename: "the original data"
       //   });
       // }
-      this.$http
-        .get(`/merchants/export_excel?city_name=${this.city.name}`)
-        .then(res => {
-          console.log(111, this.city.name);
-          if (res.data.status === 1) {
-            this.show2 = false;
-            this.show1 = true;
-            alert(res.data.notice);
-          }
-        });
+        this.$http
+          .get(`/merchants/export_excel?city_id=${this.city.id}`)
+          .then(res => {
+            console.log(111, this.city.id, res);
+            if (res.data.status === 1) {
+              this.show2 = false;
+              this.show1 = true;
+              alert(res.data.notice);
+            }
+          })
     },
     down() {
       this.$http
         .get(`/merchants/excel_file_path?city_id=${this.city.id}`)
         .then(res => {
           if (res.data.status === 1) {
+            window.open(res.data.file_path)
             this.show1 = false;
             this.show2 = true;
             alert("正在下载");

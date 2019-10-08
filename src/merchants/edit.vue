@@ -72,7 +72,7 @@ export default {
   },
   methods: {
     save() {
-      this.$http.put(`merchants/${this.$route.params.id}`).then(res => {
+      this.$http.put(`/merchants/${this.$route.params.id}`).then(res => {
         if (res.data.status === 1) {
           this.$router.push(`/merchants`);
           alert(res.data.notice);

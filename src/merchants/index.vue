@@ -43,10 +43,10 @@
       <Col :span="3" :offset="15">
         <Button type="error" size="small" @click="remove_all">一键删除</Button>
         <Button type="error" size="small" @click="export1" v-if="show2" v-model="city.name">导出为Excel</Button>
-        <Button type="error" size="small" @click="down" v-if="show1">下载Excel</Button>
+        <Button type="error" size="small" @click="down" v-if="show1" v-model="city.id">下载Excel</Button>
       </Col>
       <Col :span="24">
-        <Table border stripe :columns="columns" :data="merchants" ref="table"></Table>
+        <Table border stripe :columns="columns" :data="merchants" ref="table" id="merchantsTable"></Table>
       </Col>
     </Row>
     <Row type="flex" :gutter="24">
@@ -75,6 +75,8 @@ import {
   Select,
   Option
 } from "iview";
+// import XLSX from "xlsx";
+// import fileSaver from "file-saver";
 export default {
   components: {
     Table,
@@ -195,7 +197,8 @@ export default {
       city: {
         id: "",
         name: ""
-      }
+      },
+      filePath: ""
     };
   },
   created() {
@@ -206,6 +209,9 @@ export default {
       this.merchants = res.data.merchants;
       this.total = res.data.total;
       this.current_page = res.data.current_page;
+    });
+    this.$http.get("/merchants/excel_file_path").then(res => {
+      this.filePath = res.data.file_path;
     });
   },
   methods: {
@@ -228,7 +234,7 @@ export default {
     },
     edit(merchant_id) {
       console.log(111, merchant_id);
-      this.$router.push(`merchants/${merchant_id}/edit`);
+      this.$router.push(`/merchants/${merchant_id}/edit`);
     },
 
     remove_all() {
@@ -237,22 +243,22 @@ export default {
           this.merchants = [];
           alert(res.data.notice);
         } else {
-          alert(res.data.notice);
+          alert(res.data);
         }
       });
     },
-    export1(value) {
+    export1() {
       // if (type === 1) {
       //   this.$refs.table.exportCsv({
       //     filename: "the original data"
       //   });
       // }
-      this.$http.get(`/cities/list?city_name=${value}`).then(res => {
-        console.log(222,value)
+      this.$http.get(`/cities/list?city_name=${this.city.name}`).then(res => {
+        console.log(222, res);
         this.$http
           .get(`/merchants/export_excel?city_id=${this.city.id}`)
           .then(res => {
-            console.log(111, this.city.id);
+            console.log(111, this.city.id, res);
             if (res.data.status === 1) {
               this.show2 = false;
               this.show1 = true;
@@ -265,7 +271,9 @@ export default {
       this.$http
         .get(`/merchants/excel_file_path?city_id=${this.city.id}`)
         .then(res => {
+          console.log(res.data.status, res, this.city.id);
           if (res.data.status === 1) {
+            window.open(res.data.file_path)
             this.show1 = false;
             this.show2 = true;
             alert("正在下载");
@@ -338,7 +346,7 @@ export default {
           console.log(this.category.id, 111);
           this.merchants = res.data.merchants;
           this.total = res.data.total;
-          console.log(this.category.id, res.data.merchants);
+          console.log(this.category.id, res.data);
         });
     }
   }

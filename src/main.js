@@ -20,16 +20,6 @@ Vue.prototype.$http = axios.create({
   //  老黄接口
     // "https://mockapi.eolinker.com/FbVf4MH0a082b35420706ebbe5770bcacd13a40e3c1a6bd"
 });
-axios.interceptors.response.use(function (response) {
-  return response
-}, function (error) {
-  console.log(error.response.data)
-  if (error.response.data.error.statusCode === 401) {
-    store.dispatch('logout')
-    router.push('/login')
-  }
-  return Promise.reject(error)
-})
 new Vue({
   router,
   store,
