@@ -6,8 +6,8 @@
     </Col>-->
 
     <Col :span="3">
-      <Select filterable @on-change="searchByCity" clearable>
-        <Option v-for="city in cities" :value="city.id" :key="city.id" :label="city.name"></Option>
+      <Select filterable @on-change="searchByCity" v-model="city.id" clearable>
+        <Option v-for="city in cities"  :value="city.id" :key="city.id" :label="city.name"></Option>
       </Select>
     </Col>
     <Col :span="3">
@@ -21,9 +21,8 @@
       </Select>
     </Col>
     <Col :span="3">
-      <Button type="primary" @click="search">搜索</Button>
+      <Button type="primary" @click="getWaimai_merchants(1)">搜索</Button>
     </Col>
-   
     <Divider dashed />
      <Col :span="3" offset="21">
       <Button type="error" @click="deleteAll">删除全部</Button>
@@ -75,6 +74,9 @@ export default {
       query1: "",
       citiesFilter: [],
       cities: [],
+      city:{
+        id:""
+      },
       category:{
         id:''
       },
@@ -170,17 +172,34 @@ export default {
       current_page: 1,
     };
   },
+  activated(){
+    this.getWaimai_merchants(1)
+  },
   created() {
     this.$http.get("/cities/list").then(res => {
       this.cities = res.data.cities;
     });
-    this.$http.get("/waimai_merchants").then(res => {
-      this.waimai_merchants = res.data.waimai_merchants;
-      this.total = res.data.total;
-      this.current_page = res.data.current_page;
-    });
+    // this.$http.get("/waimai_merchants").then(res => {
+    //   this.waimai_merchants = res.data.waimai_merchants;
+    //   this.total = res.data.total;
+    //   this.current_page = res.data.current_page;
+    // });
   },
   methods: {
+    getWaimai_merchants(page){
+      let url = `/waimai_merchants?page=${page}`
+      if (this.city.id){
+        url += `&city_id=${this.city.id}`
+      }
+      if(this.category.id){
+        url += `/&category_id=${this.category.id}`
+      }
+      this.$http.get(url).then(res =>{
+        this.waimai_merchants = res.data.waimai_merchants
+        this.total = res.data.total
+        this.current_page = res.data.current_page
+      })
+    },
     page(page) {
       this.$http.get(`/waimai_merchants?page=${page}`).then(res => {
         this.waimai_merchants = res.data.waimai_merchants;
@@ -256,13 +275,14 @@ export default {
     //     }, 200);
     //   }
     // }
-    search() {
-      this.$http
-        .get(`/waimai_merchants?city_id=&categor_id=${this.category.id}||''`)
-        .then(res => {
-          this.waimai_merchants = res.data.waimai_merchants;
-        });
-    }
+    // 老板搜索
+  //   search() {
+  //     this.$http
+  //       .get(`/waimai_merchants?city_id=&categor_id=${this.category.id}||''`)
+  //       .then(res => {
+  //         this.waimai_merchants = res.data.waimai_merchants;
+  //       });
+  //   }
   }
 };
 </script>

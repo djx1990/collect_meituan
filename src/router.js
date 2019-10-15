@@ -34,7 +34,8 @@ const router = new VueRouter({
       name: "merchantsIndex",
       meta: {
         layout: true,
-        requiresAuth: true
+        requiresAuth: true,
+        keepAlive: true
       },
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
@@ -70,7 +71,8 @@ const router = new VueRouter({
       name: "merchantsEdit",
       meta: {
         layout: true,
-        requiresAuth: true
+        requiresAuth: true,
+        keepAlive: true
       },
       component: () =>
         import(/* webpackChunkName: "about" */ "./merchants/edit.vue")
@@ -80,7 +82,8 @@ const router = new VueRouter({
       name: "waimai_merchantsIndex",
       meta: {
         layout: true,
-        requiresAuth: true
+        requiresAuth: true,
+        keepAlive:true
       },
       component: () =>
         import(/* webpackChunkName: "about" */ "./waimai_merchants/index.vue")
@@ -94,6 +97,17 @@ const router = new VueRouter({
       },
       component: () =>
         import(/* webpackChunkName: "about" */ "./waimai_merchants/show.vue")
+    },
+    {
+      path: "/waimai_order",
+      name: "waimai_order",
+      meta: {
+        layout: true,
+        requiresAuth: true,
+        keepAlive:true
+      },
+      component: () =>
+        import(/* webpackChunkName: "about" */ "./waimai_merchants/order.vue")
     },
     {
       path: "/waimai_merchants/:id/edit",
@@ -160,7 +174,8 @@ const router = new VueRouter({
       name: "daijinjuansIndex",
       meta: {
         layout: true,
-        requiresAuth: true
+        requiresAuth: true,
+        keepAlive: true
       },
       component: () =>
         import(/* webpackChunkName: "about" */ "./daijinjuans/index.vue")

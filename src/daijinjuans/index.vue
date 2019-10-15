@@ -1,25 +1,32 @@
 <template>
   <Row type="flex" :gutter="16">
     <Col :span="24">
-      标题：
-      <Input search size="small" v-model="query" @on-search="search" style="width:200px"></Input>
+      <Input search placeholder="请输入标题" v-model="serch_titl" style="width:200px"></Input>
+      <DatePicker
+        split-panels
+        type="daterange"
+        placeholder="请选择时间"
+        v-model="serch_created_at"
+        style="width:200px"
+      ></DatePicker>
+      <Button type="primary" @click="getdaijinquan(1)">搜索</Button>
     </Col>
     <Divider />
     <Col :span="24">
       <Table border stripe :columns="columns" :data="daijinjuans"></Table>
     </Col>
     <Page
-    :total="total"
-    :current="current_page"
-    :page-size="20"
-    show-total
-    show-elevator
-    @on-change="page"
+      :total="total"
+      :current="current_page"
+      :page-size="20"
+      show-total
+      show-elevator
+      @on-change="getdaijinquan"
     />
   </Row>
 </template>
 <script>
-import { Row, Col, Table, Input, Divider, Page } from "iview";
+import { Row, Col, Table, Input, Divider, Page, Button, DatePicker } from "iview";
 export default {
   components: {
     Row,
@@ -27,10 +34,14 @@ export default {
     Table,
     Input,
     Divider,
-    Page
+    Page,
+    Button,
+    DatePicker
   },
   data() {
     return {
+      search_title: "",
+      search_created_at: "",
       query: "",
       columns: [
         {
@@ -96,33 +107,51 @@ export default {
         }
       ],
       daijinjuans: [],
-      total:0,
-      current_page:1
+      total: null,
+      current_page: 1
     };
   },
-  created() {
-    this.$http.get(`/daijinjuans`).then(res => {
-      this.daijinjuans = res.data.daijinjuans;
-      this.total = res.data.total
-      this.current_page = res.data.current_page
-    });
+  // created() {
+  //   this.$http.get(`/daijinjuans`).then(res => {
+  //     this.daijinjuans = res.data.daijinjuans;
+  //     this.total = res.data.total;
+  //     this.current_page = res.data.current_page;
+  //   });
+  // },
+  activated() {
+    this.getdaijinquan(1);
   },
   methods: {
-    search() {
-      if (this.query == "") {
-        this.$http.get(`/daijinjuans?query=${this.query}`).then(res => {
-          this.daijinjuans = res.data.daijinjuans;
-        });
-      } else {
-        this.daijinjuans = this.daijinjuans.filter(val => {
-          return val.title.includes(this.query);
-        });
+    //   search() {
+    //     if (this.query == "") {
+    //       this.$http.get(`/daijinjuans?query=${this.query}`).then(res => {
+    //         this.daijinjuans = res.data.daijinjuans;
+    //       });
+    //     } else {
+    //       this.daijinjuans = this.daijinjuans.filter(val => {
+    //         return val.title.includes(this.query);
+    //       });
+    //     }
+    //   },
+    //   page(page) {
+    //     this.$http.get(`/daijinjuans?page=${page}`).then(res => {
+    //       this.daijinjuans = res.data.daijinjuans;
+    //     });
+    //   }
+    // }
+    getdaijinquan(page) {
+      let url = `/daijinjuans?page=${page}`;
+      if (this.search_title) {
+        url += `&search_title=${this.search_title}`;
       }
-    },
-    page(page){
-      this.$http.get(`/daijinjuans?page=${page}`).then(res =>{
-        this.daijinjuans = res.data.daijinjuans
-      })
+      if (this.search_created_at) {
+        url += `&search_created_at=${this.search_created_at}`;
+      }
+      this.$http.get(url).then(res => {
+        this.daijinjuans = res.data.daijinjuans;
+        this.total = res.data.total;
+        this.current_page = res.data.current_page;
+      });
     }
   }
 };

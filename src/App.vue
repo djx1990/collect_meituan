@@ -28,7 +28,10 @@
 
         <Card>
           <div>
-            <router-view></router-view>
+            <keep-alive>
+              <router-view v-if='$route.meta.keepAlive'></router-view>
+            </keep-alive> 
+               <router-view v-if='!$route.meta.keepAlive'></router-view>
           </div>
         </Card>
       </Content>
@@ -79,6 +82,7 @@ export default {
           chilren: [
             { name: "商家管理", icon: "ios-navigate", to: "/merchants" },
             { name: "外买商家管理", icon: "ios-navigate", to: "/waimai_merchants" },
+            { name: "外卖订单管理", icon: "ios-navigate", to: "/waimai_order" },
             { name: "城市", icon: "ios-navigate", to: "/cities" },
             { name: "团购", icon: "md-cart", to: "/tuangous" },
             { name: "代金券", icon: "md-cart", to: "/daijinjuans" },

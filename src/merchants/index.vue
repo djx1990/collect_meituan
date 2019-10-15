@@ -19,7 +19,8 @@
         </Select>
       </Col>
       <Col :span="10">
-        <Select filterable clearable @on-change="searchByCategory" v-model="category.id">
+        <Select filterable clearable v-model="category.id">
+          <!-- @on-change="searchByCategory" -->
           <Option
             v-for="category in categories"
             :value="category.id"
@@ -29,7 +30,7 @@
         </Select>
       </Col>
       <Col :span="4">
-        <Button @click="search">搜索</Button>
+        <Button @click="getMerchants">搜索</Button>
       </Col>
       <!-- <Col :span="2">
         <Button type="primary" size="small" @click="search">搜索</Button>
@@ -46,7 +47,15 @@
         <Button type="error" size="small" @click="down" v-if="show1" v-model="city.id">下载Excel</Button>
       </Col>
       <Col :span="24">
-        <Table border stripe :columns="columns" :data="merchants" ref="table" id="merchantsTable"></Table>
+        <Table
+          border
+          stripe
+          :columns="columns"
+          :data="merchants"
+          ref="table"
+          @on-sort-change="sortTotalBenefits"
+          id="merchantsTable"
+        ></Table>
       </Col>
     </Row>
     <Row type="flex" :gutter="24">
@@ -57,7 +66,7 @@
           :page-size="20"
           show-total
           show-elevator
-          @on-change="page"
+          @on-change="getMerchants"
         ></Page>
       </Col>
     </Row>
@@ -91,6 +100,7 @@ export default {
   },
   data() {
     return {
+      order:"",
       query: "",
       query1: "",
       query2: "",
@@ -118,7 +128,10 @@ export default {
         {
           title: "平均评分",
           key: "avgscore",
-          sortable: true
+          sortable: "custom",
+          // render: (h, params) => {
+          //   return h("div", this.fenchange(params.row.avgscore));
+          // }
         },
         {
           title: "分类名称",
@@ -201,15 +214,18 @@ export default {
       filePath: ""
     };
   },
+  activated(){
+    this.getMerchants(1)
+  },
   created() {
     this.$http.get(`/cities/list`).then(res => {
       this.cities = res.data.cities;
     });
-    this.$http.get("/merchants").then(res => {
-      this.merchants = res.data.merchants;
-      this.total = res.data.total;
-      this.current_page = res.data.current_page;
-    });
+    // this.$http.get("/merchants").then(res => {
+    //   this.merchants = res.data.merchants;
+    //   this.total = res.data.total;
+    //   this.current_page = res.data.current_page;
+    // });
     this.$http.get("/merchants/excel_file_path").then(res => {
       this.filePath = res.data.file_path;
     });
@@ -273,21 +289,21 @@ export default {
         .then(res => {
           console.log(res.data.status, res, this.city.id);
           if (res.data.status === 1) {
-            window.open(res.data.file_path)
+            window.open(res.data.file_path);
             this.show1 = false;
             this.show2 = true;
             alert("正在下载");
           }
         });
     },
-    page(page) {
-      this.$http
-        .get(`/merchants?city_id=${this.city.id || ""}&page=${page}`)
-        .then(res => {
-          this.merchants = res.data.merchants;
-          this.total = res.data.total;
-        });
-    },
+    // page(page) {
+    //   this.$http
+    //     .get(`/merchants?city_id=${this.city.id || ""}&page=${page}`)
+    //     .then(res => {
+    //       this.merchants = res.data.merchants;
+    //       this.total = res.data.total;
+    //     });
+    // },
     // search() {
     //   if (this.query == "") {
     //     this.$http.get(`/merchants?query=${this.query}`).then(res => {
@@ -325,10 +341,10 @@ export default {
       this.$http.get(`/categories/list?city_id=${value}`).then(res => {
         this.categories = res.data.categories;
       });
-      this.$http.get(`/merchants?city_id=${value}`).then(res => {
-        this.merchants = res.data.merchants;
-        this.total = res.data.total;
-      });
+      // this.$http.get(`/merchants?city_id=${value}`).then(res => {
+      //   this.merchants = res.data.merchants;
+      //   this.total = res.data.total;
+      // });
     },
     searchByCategory() {
       this.$http.get(`/merchants?category_id=${this.category.id}`).then(res => {
@@ -336,19 +352,40 @@ export default {
         this.total = res.data.total;
       });
     },
-    search() {
-      this.$http
-        .get(
-          `/merchants?city_id=${this.city.id || ""}&category_id=${this.category
-            .id || ""}`
-        )
-        .then(res => {
-          console.log(this.category.id, 111);
-          this.merchants = res.data.merchants;
-          this.total = res.data.total;
-          console.log(this.category.id, res.data);
-        });
+    getMerchants(page) {
+      let url = `/merchants?page=${page}`
+      if(this.city.id){
+        url += `&city_id=${this.city.id}`
+      }
+      if(this.category.id){
+        url += `&category_id=${this.category.id}`
+      }
+      if(this.order){
+        url += `$order=${this.order}`
+      }
+      this.$http.get(url).then(res =>{
+        this.merchants = res.data.merchants
+        this.total = res.data.total
+        this.current_page = res.data.current_page
+      })
+    //   this.$http
+    //     .get(
+    //       `/merchants?city_id=${this.city.id || ""}&category_id=${this.category
+    //         .id || ""}`
+    //     )
+    //     .then(res => {
+    //       console.log(this.category.id, 111);
+    //       this.merchants = res.data.merchants;
+    //       this.total = res.data.total;
+    //       console.log(this.category.id, res.data);
+    //     });
+    // }
+    },
+    sortTotalBenefits(params){
+      this.order = params.order
+      this.getMerchants(1)
+      console.log(params)
     }
   }
-};
+}
 </script>
