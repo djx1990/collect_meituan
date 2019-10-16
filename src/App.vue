@@ -6,7 +6,7 @@
     <Sider :style="{position: 'fixed', height: '100vh', left: 0, overflow: 'auto'}">
 
       <Menu active-name="1-2" theme="dark" width="auto" :open-names="['1']">
-        <Submenu :name="index" v-for="(menu, index) in menus">
+        <Submenu :name="index" v-for="(menu, index) in menus" :key="index">
           <template slot="title">
             <Icon :type="menu.icon"></Icon>
             {{menu.name}}
@@ -14,7 +14,7 @@
           <MenuItem
             :to="menuitem.to"
             :name="index + '-' + itemindex"
-            v-for="(menuitem, itemindex) in menu.chilren"
+            v-for="(menuitem, itemindex) in menu.chilren" :key="itemindex"
           > <!-- :name="index + '-' + itemindex" 放在：to后面，给导航添加的序列号-->
             <Icon :type="menuitem.icon"></Icon>
             {{menuitem.name}}
@@ -82,7 +82,7 @@ export default {
           chilren: [
             { name: "商家管理", icon: "ios-navigate", to: "/merchants" },
             { name: "外买商家管理", icon: "ios-navigate", to: "/waimai_merchants" },
-            { name: "外卖订单管理", icon: "ios-navigate", to: "/waimai_order" },
+            { name: "外卖订单管理", icon: "ios-navigate", to: "/order" },
             { name: "城市", icon: "ios-navigate", to: "/cities" },
             { name: "团购", icon: "md-cart", to: "/tuangous" },
             { name: "代金券", icon: "md-cart", to: "/daijinjuans" },

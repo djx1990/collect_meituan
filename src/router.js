@@ -99,15 +99,26 @@ const router = new VueRouter({
         import(/* webpackChunkName: "about" */ "./waimai_merchants/show.vue")
     },
     {
-      path: "/waimai_order",
-      name: "waimai_order",
+      path: "/order",
+      name: "order",
       meta: {
         layout: true,
         requiresAuth: true,
         keepAlive:true
       },
       component: () =>
-        import(/* webpackChunkName: "about" */ "./waimai_merchants/order.vue")
+        import(/* webpackChunkName: "about" */ "./order/order.vue")
+    },
+    {
+      path: "/order/:id",
+      name: "order",
+      meta: {
+        layout: true,
+        requiresAuth: true,
+        keepAlive:true
+      },
+      component: () =>
+        import(/* webpackChunkName: "about" */ "./order/show.vue")
     },
     {
       path: "/waimai_merchants/:id/edit",
@@ -296,12 +307,9 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   // const token = store.state.token?store.state.token:window.sessionStorage.getItem("token")
   if (to.matched.some(record => record.meta.requiresAuth)) {
-    console.log(VueCookie);
     let cookie = VueCookie.get("user");
-    console.log(cookie);
     if (cookie !== null) {
       Vue.prototype.$http.defaults.headers.common["Authorization"] = `Bearer ${cookie}`;
-      console.log(Vue.prototype.$http.defaults.headers, 11);
       next();
     } else {
       if (store.state.user === null) {
