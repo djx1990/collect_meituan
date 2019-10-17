@@ -111,7 +111,7 @@ const router = new VueRouter({
     },
     {
       path: "/order/:id",
-      name: "order",
+      name: "showOrder",
       meta: {
         layout: true,
         requiresAuth: true,
