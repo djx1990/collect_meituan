@@ -121,7 +121,6 @@ export default {
         {
           title: "商家数量",
           key: 'merchants_count',
-          sortable: 'custom',
           // filters:[
           //   {
           //     label:"0-200",
@@ -232,13 +231,11 @@ export default {
   methods:{
     showCategories(cityId){
       this.$router.push(`/categoriescity/${cityId}`)
-      console.log(cityId,111)
     },
     showMerchants(cityId){
       this.$router.push(`/merchantscity/${cityId}`)
     },
     caijicategories(cityId){
-      console.log()
       this.$http.get(`/categories/cate_collect?city_id=${cityId}`).then(res =>{
         if(res.data.status){
           alert(res.data.notice)
@@ -246,9 +243,7 @@ export default {
       })
     },
     caijishanghu(cityId){
-      console.log(cityId,111)
       this.$http.get(`/cities/${cityId}/collect`).then(res =>{
-        console.log(this.cities,111)
        if(res.data.status === 1){
          alert(res.data.notice)
        }else{

@@ -4,7 +4,9 @@
  </div>
  <div class="layout" v-else>
     <Sider :style="{position: 'fixed', height: '100vh', left: 0, overflow: 'auto'}">
-
+      <div style="text-align: center; padding: 10px;">
+        <img src="../public/疯味logo.jpeg" alt="" width="40%">
+      </div>
       <Menu active-name="1-2" theme="dark" width="auto" :open-names="['1']">
         <Submenu :name="index" v-for="(menu, index) in menus" :key="index">
           <template slot="title">
@@ -25,7 +27,6 @@
     <Layout :style="{marginLeft: '200px'}">
       <Header :style="{background: '#fff', boxShadow: '0 2px 3px 2px rgba(0,0,0,.1)'}"></Header>
       <Content :style="{padding: '10px 16px 16px'}"></Content>
-
         <Card>
           <div>
             <keep-alive>
@@ -77,9 +78,16 @@ export default {
         //   chilren: [{ name: "控制面版", icon: "ios-navigate", to: "/list" }]
         // },
         {
+          name:"商户管理",
+          icon:"ios-navigate",
+          chilren:[
+            {name:"商户管理", icon:"ios-navigate", to:"/merchantsM"}
+          ]
+        },
+        {
           name: "平台管理",
           icon: "ios-navigate",
-          chilren: [
+          chilren: [ 
             { name: "商家管理", icon: "ios-navigate", to: "/merchants" },
             { name: "外买商家管理", icon: "ios-navigate", to: "/waimai_merchants" },
             { name: "外卖订单管理", icon: "ios-navigate", to: "/order" },
@@ -91,6 +99,13 @@ export default {
             { name: "分类", icon: "md-cart", to: "/categories" },
             { name: "用户", icon: "md-cart", to: "/users" }
             ]
+        },
+        {
+          name: "活动管理",
+          icon:"ios-navigate",
+          chilren:[
+            { name: "活动首页",icon:"ios-navigate",to: "/promotions" }
+          ]
         }
       ],
       show: false
@@ -112,6 +127,10 @@ export default {
 .layout-header-bar {
   background: #fff;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+}
+.photo{
+  width:auto
+  
 }
 </style>
 

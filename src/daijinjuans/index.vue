@@ -1,19 +1,19 @@
 <template>
   <Row type="flex" :gutter="16">
     <Col :span="24">
-      <Input search placeholder="请输入标题" v-model="serch_titl" style="width:200px"></Input>
+      <Input search placeholder="请输入标题" v-model="search_title" style="width:200px"></Input>
       <DatePicker
         split-panels
         type="daterange"
         placeholder="请选择时间"
-        v-model="serch_created_at"
+        v-model="search_created_at"
         style="width:200px"
       ></DatePicker>
       <Button type="primary" @click="getdaijinquan(1)">搜索</Button>
     </Col>
     <Divider />
     <Col :span="24">
-      <Table border stripe :columns="columns" :data="daijinjuans"></Table>
+      <Table border stripe :columns="columns" :data="daijinjuans" @on-sort-change="getOrder"></Table>
     </Col>
     <Page
       :total="total"
@@ -26,7 +26,16 @@
   </Row>
 </template>
 <script>
-import { Row, Col, Table, Input, Divider, Page, Button, DatePicker } from "iview";
+import {
+  Row,
+  Col,
+  Table,
+  Input,
+  Divider,
+  Page,
+  Button,
+  DatePicker
+} from "iview";
 export default {
   components: {
     Row,
@@ -55,17 +64,17 @@ export default {
         {
           title: "原价",
           key: "originprice",
-          sortable: true
+          sortable: "custom"
         },
         {
           title: "现价",
           key: "price",
-          sortable: true
+          sortable: "custom"
         },
         {
           title: "已售数量",
           key: "solds",
-          sortable: true
+          sortable: "custom"
         },
         {
           title: "标题",
@@ -108,7 +117,8 @@ export default {
       ],
       daijinjuans: [],
       total: null,
-      current_page: 1
+      current_page: 1,
+      order: ""
     };
   },
   // created() {
@@ -147,11 +157,18 @@ export default {
       if (this.search_created_at) {
         url += `&search_created_at=${this.search_created_at}`;
       }
+      if (this.order) {
+        url += `&order=${this.order}`;
+      }
       this.$http.get(url).then(res => {
         this.daijinjuans = res.data.daijinjuans;
         this.total = res.data.total;
         this.current_page = res.data.current_page;
       });
+    },
+    getOrder(params) {
+      this.order = params.order;
+      this.getdaijinquan(1);
     }
   }
 };

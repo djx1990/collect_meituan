@@ -1,16 +1,22 @@
 <template>
   <div>
     <Row>
-      <Input v-model="city.id" clearable placeholder="请输入城市名字" style="width:20%"></Input>
-      <DatePicker
-        type="daterange"
-        placeholder="选择查询时间"
-        style="width:20%"
-        :split-panels="true"
-        clearable
-        v-model="searchTime"
-      />
-      <Button type="primary" @click="getWaimai_order(1)">搜索</Button>
+      <Col>
+        <Input v-model="city.id" clearable placeholder="请输入城市名字" style="width:20%"></Input>
+        <DatePicker
+          style="width:20%;margin-left: 1rem; margin-bottom: 1rem"
+          type="daterange"
+          placeholder="选择查询时间"
+          :split-panels="true"
+          clearable
+          v-model="searchTime"
+        />
+        <Button
+          style="margin-left: 1rem;"
+          type="primary"
+          @click="getWaimai_order(1)"
+        >搜索</Button>
+      </Col>
     </Row>
     <Row>
       <Col>

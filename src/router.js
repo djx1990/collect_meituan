@@ -30,6 +30,19 @@ const router = new VueRouter({
       component: () => import(/* webpackChunkName: "about" */ "./users/add.vue")
     },
     {
+      path: "/merchantsManagement",
+      name: "merchantsMList",
+      meta: {
+        layout: true,
+        requiresAuth: true,
+        keepAlive: true
+      },
+      component: () =>
+        import(
+          /* webpackChunkName: "about" */ "./merchantsM/merchantsMList.vue"
+        )
+    },
+    {
       path: "/merchants",
       name: "merchantsIndex",
       meta: {
@@ -83,7 +96,7 @@ const router = new VueRouter({
       meta: {
         layout: true,
         requiresAuth: true,
-        keepAlive:true
+        keepAlive: true
       },
       component: () =>
         import(/* webpackChunkName: "about" */ "./waimai_merchants/index.vue")
@@ -104,7 +117,7 @@ const router = new VueRouter({
       meta: {
         layout: true,
         requiresAuth: true,
-        keepAlive:true
+        keepAlive: true
       },
       component: () =>
         import(/* webpackChunkName: "about" */ "./order/order.vue")
@@ -115,7 +128,7 @@ const router = new VueRouter({
       meta: {
         layout: true,
         requiresAuth: true,
-        keepAlive:true
+        keepAlive: true
       },
       component: () =>
         import(/* webpackChunkName: "about" */ "./order/show.vue")
@@ -301,6 +314,54 @@ const router = new VueRouter({
       },
       component: () =>
         import(/* webpackChunkName: "about" */ "./users/edit.vue")
+    },
+    {
+      path: "/promotions",
+      name: "promotionsIndex",
+      meta: {
+        layout: true,
+        requiresAuth: true,
+        keepAlive: true
+      },
+      component: () =>
+        import(
+          /* webpackChunkName: "about" */ "./promotions/promotionsList.vue"
+        )
+    },
+    {
+      path: "/onePromotion/:id/edit",
+      name: "promotionsPromotion1",
+      meta: {
+        layout: true,
+        requiresAuth: true,
+        keepAlive: true
+      },
+      component: () =>
+        import(/* webpackChunkName: "about" */ "./promotions/onePromotion.vue")
+    },
+    {
+      path: "/twoPromotion/:id/edit",
+      name: "promotionsPromotion2",
+      meta: {
+        layout: true,
+        requiresAuth: true,
+        keepAlive: true
+      },
+      component: () =>
+        import(/* webpackChunkName: "about" */ "./promotions/twoPromotion.vue")
+    },
+    {
+      path: "/threePromotion/:id/edit",
+      name: "promotionsPromotion3",
+      meta: {
+        layout: true,
+        requiresAuth: true,
+        keepAlive: true
+      },
+      component: () =>
+        import(
+          /* webpackChunkName: "about" */ "./promotions/threePromotion.vue"
+        )
     }
   ]
 });
@@ -309,7 +370,9 @@ router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
     let cookie = VueCookie.get("user");
     if (cookie !== null) {
-      Vue.prototype.$http.defaults.headers.common["Authorization"] = `Bearer ${cookie}`;
+      Vue.prototype.$http.defaults.headers.common[
+        "Authorization"
+      ] = `Bearer ${cookie}`;
       next();
     } else {
       if (store.state.user === null) {

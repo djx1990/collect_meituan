@@ -5,7 +5,13 @@
         <Select style="width: 100px" v-model="status" placeholder="请选择状态" filterable clearable>
           <Option v-for="(s,index) in statusList" :value="s.value" :key="index">{{ s.label }}</Option>
         </Select>
-        <DatePicker style="margin-left: 1rem; margin-bottom: 1rem " type="daterange" placeholder="选择日期和时间" v-model="start_at" split-panels></DatePicker>
+        <DatePicker
+          style="margin-left: 1rem; margin-bottom: 1rem "
+          type="daterange"
+          placeholder="选择日期和时间"
+          v-model="start_at"
+          split-panels
+        ></DatePicker>
         <Button style="margin-left: 1rem" type="primary" @click="getOrder(1)">搜索</Button>
       </Col>
     </Row>
@@ -29,21 +35,34 @@
         <Button type="primary" @click="save">返回</Button>
       </Col>
     </Row>
+    <Modal title="订单退款" closable @on-ok="refund" v-model="refundModal">
+      <p>是否需要将此订单退款？</p>
+    </Modal>
   </div>
 </template>
 <script>
-import { Row, Col, Table, Input, Page, Button, Select, Option, DatePicker } from "iview";
+import {
+  Row,
+  Col,
+  Table,
+  Page,
+  Button,
+  Select,
+  Option,
+  DatePicker,
+  Modal
+} from "iview";
 export default {
   components: {
     Row,
     Col,
     Table,
     Page,
-    Input,
     Button,
     Select,
     Option,
-    DatePicker
+    DatePicker,
+    Modal
   },
   data() {
     return {
@@ -72,8 +91,10 @@ export default {
       ],
       total: null,
       start_at: "",
+      refundModal: false,
+      orderInfo: {},
       current_page: null,
-      order_order:'',
+      order_order: "",
       order: [],
       columns: [
         {
@@ -122,28 +143,32 @@ export default {
         {
           title: "操作",
           key: "action",
-          render:(h,params)=>{
-            return h("div",[
-              h("button",{
-                on:{
-                  click:()=>{
-                    this.top(params.row)
-                     console.log(params.row.status)
-                  }
-                }
-              },"置顶"
-              )
-            ])
-            if(params.row.status === 1){
-              return h("div",[
-                h("Button",{
-                  on:{
-                    click:()=>{
-                      this.showRefund(params.row)
+          render: (h, params) => {
+            // return h("div",[
+            //   h("button",{
+            //     on:{
+            //       click:()=>{
+            //         this.top(params.row)
+            //          console.log(params.row.status)
+            //       }
+            //     }
+            //   },"置顶"
+            //   )
+            // ])
+            if (params.row.status === 1) {
+              return h("div", [
+                h(
+                  "Button",
+                  {
+                    on: {
+                      click: () => {
+                        this.showRefund(params.row);
+                      }
                     }
-                  }
-                },"退款")
-              ])
+                  },
+                  "退款"
+                )
+              ]);
             }
           }
         }
@@ -193,12 +218,28 @@ export default {
     save() {
       this.$router.push("/order");
     },
-    top(row){
-      this.$http.put(`/put/${this.$route.params.id}/${row.id}/top`).then(res =>{
-        if(res.data.status === 1){
-          this.order = res.data.order
+    top(row) {
+      this.$http
+        .put(`/put/${this.$route.params.id}/${row.id}/top`)
+        .then(res => {
+          if (res.data.status === 1) {
+            this.order = res.data.order;
+          }
+        });
+    },
+    showRefund(obj) {
+      this.refundModal = true;
+      this.orderInfo = obj;
+    },
+    refund() {
+      this.$gttp.post(`/order/${this.orderInfo.id}/refund`).then(res => {
+        if (res.data.status === 1) {
+          this.$Message.success("退款成功！");
+          this.getOrder(this.current_page);
+        } else {
+          this.$Message.error(res.data.notice);
         }
-      })
+      });
     }
   }
 };
