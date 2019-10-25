@@ -7,6 +7,9 @@ import '../public/js/util.js'
 import VueCookie from 'vue-cookies'
 Vue.use(VueCookie)
 
+import { Switch } from 'iview'
+Vue.component('i-switch', Switch)
+
 
 import 'iview/dist/styles/iview.css';
 

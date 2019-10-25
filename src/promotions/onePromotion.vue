@@ -8,7 +8,6 @@
     </Row>
   </div>
 </template>
-
 <script>
 import { Row, Col, Button} from "iview";
 export default {

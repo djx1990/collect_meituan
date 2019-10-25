@@ -1,6 +1,7 @@
 <template>
   <div>
-    <Row style="margin-bottom: 1rem">
+    <Row style="margin-bottom: 1rem" >
+      <Col :span="21">
       <Input v-model="shop_name" clearable placeholder="请输入商户名字" style="width:20%"></Input>
       <DatePicker
         type="daterange"
@@ -9,7 +10,11 @@
         split-panels
         style="width:20%; margin-left: 1rem"
       ></DatePicker>
-      <Button type="primary" @click="getMerchants(1)" style="width:20%; margin-left: 1rem">搜索</Button>
+      <Button type="primary" @click="getMerchants(1)" style="margin-left: 1rem">搜索</Button>
+      </Col>
+      <Col :span="3">
+        <Button type= "primary" to='/merchantsM/new'>新建商户</Button>
+      </Col>
     </Row>
     <Table border :columns="columns" :data="merchants"></Table>
     <Page
@@ -81,7 +86,28 @@ export default {
         },
         {
           title:'操作',
-          key:"action"
+          key:"action",
+          render:(h,params)=>{
+            return h("div",[
+              h("Button",{
+                on:{
+                  click:()=>{
+                    this.$router.push(`/merchantsM/${params.row.id}/edit`)
+                  }
+                }
+              },"编辑"),
+              h("Button",{
+                style:{
+                  background:'red'
+                },
+                on:{
+                  click:()=>{
+                    this.remove(params.index)
+                  }
+                }
+              },"删除")
+            ])
+          }
         },
       ]
     };
@@ -102,6 +128,15 @@ export default {
         this.merchants = res.data.merchants
         this.total = res.data.total
         this.current_page = res.data.current_page
+      })
+    },
+    remove(index){
+      let merchantsM = this.merchants[index]
+      this.$http.delete(`/merchantsMList/${merchantsM.id}`).then(res =>{
+        if(res.data.status === 1){
+          console.log(111)
+          this.merchantsM.splice(index,1)
+        }
       })
     }
   }

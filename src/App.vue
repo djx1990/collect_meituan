@@ -30,9 +30,9 @@
         <Card>
           <div>
             <keep-alive>
-              <router-view v-if='$route.meta.keepAlive'></router-view>
+              <router-view v-if='$route.meta.keepAlive' append></router-view>
             </keep-alive> 
-               <router-view v-if='!$route.meta.keepAlive'></router-view>
+               <router-view v-if='!$route.meta.keepAlive' append></router-view>
           </div>
         </Card>
       </Content>

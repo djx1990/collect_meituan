@@ -30,7 +30,7 @@ const router = new VueRouter({
       component: () => import(/* webpackChunkName: "about" */ "./users/add.vue")
     },
     {
-      path: "/merchantsManagement",
+      path: "/merchantsM",
       name: "merchantsMList",
       meta: {
         layout: true,
@@ -40,6 +40,30 @@ const router = new VueRouter({
       component: () =>
         import(
           /* webpackChunkName: "about" */ "./merchantsM/merchantsMList.vue"
+        )
+    },
+    {
+      path: "/merchantsM/new",
+      name: "merchantsMNew",
+      meta: {
+        layout: true,
+        requiresAuth: true,
+      },
+      component: () =>
+        import(
+          /* webpackChunkName: "about" */ "./merchantsM/merchantEdit.vue"
+        )
+    },
+    {
+      path: "/merchantsM/:id/edit",
+      name: "merchantsMEdit",
+      meta: {
+        layout: true,
+        requiresAuth: true,
+      },
+      component: () =>
+        import(
+          /* webpackChunkName: "about" */ "./merchantsM/merchantEdit.vue"
         )
     },
     {
