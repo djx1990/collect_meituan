@@ -20,9 +20,9 @@
 import { mapActions } from "vuex";
 // import cookie from "vue-cookies";
 // import { setCookies, getCookies} from "./cookie.js"
-import { Form, FormItem, Input, Button, Checkbox } from "iview";
+import { Form, FormItem, Input, Button } from "iview";
 export default {
-  components: { Form, FormItem, Input, Button, Checkbox },
+  components: { Form, FormItem, Input, Button },
   data() {
     return {
       checked: false,

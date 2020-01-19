@@ -77,21 +77,17 @@ import {
   Table,
   Row,
   Col,
-  Input,
   Button,
   Divider,
   Page,
   Select,
   Option
 } from "iview";
-// import XLSX from "xlsx";
-// import fileSaver from "file-saver";
 export default {
   components: {
     Table,
     Row,
     Col,
-    Input,
     Button,
     Divider,
     Page,
@@ -129,9 +125,6 @@ export default {
           title: "平均评分",
           key: "avgscore",
           sortable: "custom",
-          // render: (h, params) => {
-          //   return h("div", this.fenchange(params.row.avgscore));
-          // }
         },
         {
           title: "分类名称",

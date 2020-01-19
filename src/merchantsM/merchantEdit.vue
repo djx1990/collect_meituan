@@ -20,7 +20,7 @@
           <span slot="close">关闭</span>
         </i-switch>
       </FormItem>
-      <FormItem label="标签" prop="tags_array">
+      <FormItem label='标签' prop="tags_array">
         <Select v-model="merchant.tags_array" multiple style="width:30%">
           <Option
             v-for="(tags,index) in tags_array"
@@ -96,11 +96,11 @@ export default {
         logo: [{ required: true, message: "请上传门头" }]
       },
       managers: [],
-      formTitle: ""
+      formTitle: "",
+      headers: ''
     };
   },
   created() {
-    console.log(this.$route.name)
     if (this.$route.name === "merchantsMNew") {
       this.formTitle = "新建商户";
     } else {
@@ -109,7 +109,6 @@ export default {
         .get(`/merchantsMList/${this.$route.params.id}/managers`)
         .then(res => {
           this.managers = res.data.managers;
-          console.log(res.data.managers)
         });
       this.$http.get(`merchantsMList/${this.$route.params.id}`).then(res => {
         this.merchant = res.data.merchant;

@@ -18,7 +18,7 @@ const router = new VueRouter({
         requiresAuth: false
       },
       component: () =>
-        import(/* webpackChunkName: "about" */ "./users/login.vue")
+        import(/* webpackChunkName: "login" */ "./users/login.vue")
     },
     {
       path: "/users/add",
@@ -27,7 +27,7 @@ const router = new VueRouter({
         layout: false,
         requiresAuth: false
       },
-      component: () => import(/* webpackChunkName: "about" */ "./users/add.vue")
+      component: () => import(/* webpackChunkName: "add" */ "./users/add.vue")
     },
     {
       path: "/merchantsM",
@@ -51,7 +51,7 @@ const router = new VueRouter({
       },
       component: () =>
         import(
-          /* webpackChunkName: "about" */ "./merchantsM/merchantEdit.vue"
+          /* webpackChunkName: "merchantMNew" */ "./merchantsM/merchantEdit.vue"
         )
     },
     {
@@ -78,7 +78,7 @@ const router = new VueRouter({
       // this generates a separate chunk (about.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
       component: () =>
-        import(/* webpackChunkName: "about" */ "./merchants/index.vue")
+        import(/* webpackChunkName: "merchantsIndex" */ "./merchants/index.vue")
     },
     {
       path: "/merchantscity/:id",
@@ -91,7 +91,7 @@ const router = new VueRouter({
       // this generates a separate chunk (about.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
       component: () =>
-        import(/* webpackChunkName: "about" */ "./merchants/merchantscity.vue")
+        import(/* webpackChunkName: "merchantsCity" */ "./merchants/merchantscity.vue")
     },
     {
       path: "/merchants/:id",
