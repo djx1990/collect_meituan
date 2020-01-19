@@ -1,62 +1,59 @@
 <template>
-  <Row type="flex" :gutter="16">
-    <Col :span="24"> 
-      城市:
-      <Input search v-model='query' @on-search="search" style="width:200px;margin:20px"></Input>
+  <div>
+    <Row type="flex" :gutter="16">
+      <Col :span="24"> 
+        城市:
+        <Input search v-model='query' @on-search="search" style="width:200px;margin:20px"></Input>
+        </Col>
+        <Divider/>
+      <Col :span='24' >
+        <Button type="primary" small @click="caijiCities" style="margin:20px; margin-left:0px">采集城市</Button>
+        <Button small type='error' @click="deleteAll" style="margin-buttom:20px">删除全部</Button>
       </Col>
-      <Divider/>
-    <Col :span='24' >
-      <Button type="primary" small @click="caijiCities" style="margin:20px; margin-left:0px">采集城市</Button>
-      <Button small type='error' @click="deleteAll" style="margin-buttom:20px">删除全部</Button>
-    </Col :span='24'>
-    <Col :span='3'>商户数量：</Col>
-    <Col :span="4">
-      <Select size='small' filterable @on-change="searchByMerchantsCount" clearable v-model="merchantCount" @on-clear="clearMerchantsCount">
-        <Option 
-        v-for="(merchant_count, index) in merchant_counts" 
-        :value="merchant_count.value" 
-        :key="merchant_count.value" 
-        :label="merchant_count.lable">
-        </Option>
-      </Select> 
-    </Col>
-    <Col :span='3'>分类数量：</Col>
-    <Col :span="4">
-      <Select size='small' filterable @on-change="searchByCategoryCount" clearable v-model="categoryCount" @on-clear="clearCategoryCount">
-        <Option 
-        v-for="category_count in category_counts" 
-        :value="category_count.value" 
-        :key="category_count.value" 
-        :label="category_count.lable">
-        </Option>
-      </Select> 
-    </Col>
-    <Col>
-      <Table 
+      <Col :span='3'>商户数量：</Col>
+      <Col :span="4">
+        <Select size='small' filterable @on-change="searchByMerchantsCount" clearable v-model="merchantCount" @on-clear="clearMerchantsCount">
+          <Option 
+          v-for="(merchant_count, index) in merchant_counts" 
+          :value="merchant_count.value" 
+          :key="index" 
+          :label="merchant_count.lable">
+          </Option>
+        </Select> 
+      </Col>
+      <Col :span='3'>分类数量：</Col>
+      <Col :span="4">
+        <Select size='small' filterable @on-change="searchByCategoryCount" clearable v-model="categoryCount" @on-clear="clearCategoryCount">
+          <Option 
+          v-for="category_count in category_counts" 
+          :value="category_count.value" 
+          :key="category_count.value" 
+          :label="category_count.lable">
+          </Option>
+        </Select> 
+      </Col>
+    </Row>
+    <Table 
       border 
       strip 
       :columns= "columns" 
       :data= "cities" 
       style= "width:100%"
       @on-sort-change="sort"></Table>
-    </Col>
-    <Col :span='24'>
-      <Page 
-        :total='total'
-        :current="current_page"
-        :page-size="20"
-        show-total
-        show-elevator
-        @on-change="page"
-      />
-    </Col>
-  </Row>
+    <Page 
+      :total='total'
+      :current="current_page"
+      :page-size="25"
+      show-total
+      show-elevator
+      @on-change="page"
+    />
+  </div>  
 </template>
 <script>
-import { Icon, Row, Col, Table, Button, Input, Select, Option, Divider, Page} from "iview";
+import { Row, Col, Table, Button, Input, Select, Option, Divider, Page} from "iview";
 export default {
   components:{
-    Icon,
     Row,
     Col,
     Table,
@@ -120,34 +117,7 @@ export default {
         },
         {
           title: "商家数量",
-          key: 'merchants_count',
-          // filters:[
-          //   {
-          //     label:"0-200",
-          //     value:1
-          //   },
-          //   {
-          //     label:"201-999",
-          //     value:2
-          //   },
-          //   {
-          //     label:">1000",
-          //     value:3
-          //   }
-          // ],
-          // renderHeader:(h,params)=>{
-          //   return h('span',[
-          //     h(
-          //       'button',{
-          //         on:{
-          //          click:()=>{
-          //            this.merchantsUp(params.index)
-          //          } 
-          //         }
-          //       },'up'),
-          //     h("strong",params.column.title)
-          //   ])
-          // }
+          key: 'merchants_count'
         },
         {
           title: "分类数量",
@@ -161,54 +131,50 @@ export default {
         {
           title: "操作",
           key: "aciton",
-          render:(h,params) =>{
+          render: (h, params) => {
             return h('div',[
-              h(
-                "Button",{
-                  on:{
-                    click:()=>{
-                      // this.$router.push(`/categories/${city_id}`)
-                      // console.log(city_id)
-                      this.showCategories(params.row.id)
-                    }
-                  }
-                },
-                '查看分类'
-              ),
-              h(
-                "Button",
-                {
-                  props:{
-                    type:'primary'
+              h(Button, {
+                props: {
+                    type: 'primary',
+                    size: 'small'
                   },
-                  on:{
-                    click:()=>{
-                      this.showMerchants(params.row.id)
-                    } 
+                on:{
+                  click: () => {
+                    this.$router.push(`/categoriescity/${params.row.id}`)
                   }
+                }
+              }, '查看分类'),
+              h(Button, {
+                props: {
+                  size: 'small'
                 },
-                "查看商家"
-              ),
-              h(
-                "Button",{
-                  on:{
-                    click:()=>{
-                      this.caijishanghu(params.row.id)
-                    }
+                on: {
+                  click: () => {
+                    this.$router.push(`/merchantscity/${params.row.id}`)
+                  } 
+                }
+              }, "查看商家"),
+              h(Button, {
+                props: {
+                  size: 'small'
+                },
+                on: {
+                  click: () => {
+                    this.caijishanghu(params.row.id)
                   }
+                }
+              }, "采集商户"),
+              h(Button, {
+                props: {
+                  type: 'primary',
+                  size: 'small'
                 },
-                "采集商户"
-              ),
-              h(
-                "Button",{
-                  on:{
-                    click:()=>{
-                      this.caijicategories(params.row.id)
-                    }
+                on: {
+                  click: () => {
+                    this.caijicategories(params.row.id)
                   }
-                },
-                "采集城市分类"
-              )
+                }
+              }, "采集城市分类")
             ])
           }
         }
@@ -229,12 +195,6 @@ export default {
     });
   },
   methods:{
-    showCategories(cityId){
-      this.$router.push(`/categoriescity/${cityId}`)
-    },
-    showMerchants(cityId){
-      this.$router.push(`/merchantscity/${cityId}`)
-    },
     caijicategories(cityId){
       this.$http.get(`/categories/cate_collect?city_id=${cityId}`).then(res =>{
         if(res.data.status){

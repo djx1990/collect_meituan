@@ -1,24 +1,19 @@
 <template>
-  <Row type="flex" :gutter="2">
-    <Col :span="3">
-      <h2>城市：</h2>
-    </Col>
-    <Col :span="5">
-      <Select filterable @on-change="searchByCity" clearable @on-clear="clear" v-model="city_id">
-        <Option v-for="city in cities" :value="city.id" :key="city.id" :label="city.name"></Option>
-      </Select>
-    </Col>
-    <Divider />
-    <Col>
-      <Table border stripe :columns="columns" :data="categories"></Table>
-    </Col>
-    <Col>
-      <Page :total="total" show-total show-elevator :page-size="20" @on-change="page" />
-    </Col>
-  </Row>
+  <div>
+    <Row type="flex" :gutter="2">
+      <Col :span="20">
+        <Select filterable clearable v-model="city_id" placeholder="请选择城市" style="width: 20%; margin-right: 1rem">
+          <Option v-for="city in cities" :value="city.id" :key="city.id" :label="city.name"></Option>
+        </Select>
+        <Button @click='getCategories(1)' type="primary">搜索</Button>
+      </Col>
+    </Row>
+    <Table border stripe :columns="columns" :data="categories"></Table>
+    <Page :total="total" :current="current_page" show-total show-elevator :page-size="25" @on-change="page" />
+  </div>
 </template>
 <script>
-import { Row, Col, Table, Select, Option, Page, Divider } from "iview";
+import { Row, Col, Table, Select, Option, Page, Button } from "iview";
 export default {
   components: {
     Row,
@@ -27,7 +22,7 @@ export default {
     Select,
     Option,
     Page,
-    Divider
+    Button
   },
   data() {
     return {
@@ -60,24 +55,25 @@ export default {
       categories: [],
       cities: [],
       city_id: null,
-      total: 0
+      total: 0,
+      current_page: 1
     };
   },
   created() {
-    // this.$http.get(`/categories`).then(res => {
-    //   // this.categories = res.data.categories;
-    //   this.total = res.data.total;
-    // });
+    this.getCategories(this.current_page)
     this.$http.get(`/cities`).then(res => {
       this.cities = res.data.cities;
     });
     this.city_id = this.$route.params.id;
-    this.$http.get(`/categories?city_id=${this.city_id}`).then(res => {
-      this.categories = res.data.categories;
-      this.total = res.data.total;
-    });
   },
   methods: {
+    getCategories (page) {
+      this.$http.get(`/categories?page=${page}&city_id=${this.city_id}`).then(res => {
+        this.categories = res.data.categories;
+        this.total = res.data.total;
+        this.current_page = res.data.current_page
+      })
+    },
     searchByCity(value) {
       this.$http.get(`/categories?city_id=${value}`).then(res => {
         this.categories = res.data.categories;

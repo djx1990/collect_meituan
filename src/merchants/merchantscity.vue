@@ -1,18 +1,6 @@
 <template>
   <Row type="flex" :gitter="24">
     <Row type="flex" :gutter="12">
-      <!-- <Col :span="2">城市:</Col>
-      <Col :span="5">
-        <Input v-model="query" size="small" search @on-search="search"></Input>
-      </Col>
-      <Col :span="2">店名:</Col>
-      <Col :span="5">
-        <Input v-model="query1" size="small" search @on-search="search1"></Input>
-      </Col>
-      <Col :span="2">分类:</Col>
-      <Col :span="5">
-        <Input v-model="query2" size="small" search @on-search="search2"></Input>
-      </Col>-->
       <Col :span="10">
         <Select filterable @on-change="searchByCity" clearable v-model="city.id">
           <Option v-for="city in cities" :value="city.id" :key="city.id" :label="city.name"></Option>
@@ -29,11 +17,8 @@
         </Select>
       </Col>
       <Col :span="4">
-        <Button @click="search">搜索</Button>
+        <Button @click="search" type="primary">搜索</Button>
       </Col>
-      <!-- <Col :span="2">
-        <Button type="primary" size="small" @click="search">搜索</Button>
-      </Col>-->
     </Row>
     <Divider dashed />
     <Row>
@@ -68,7 +53,6 @@ import {
   Table,
   Row,
   Col,
-  Input,
   Button,
   Divider,
   Page,
@@ -80,7 +64,6 @@ export default {
     Table,
     Row,
     Col,
-    Input,
     Button,
     Divider,
     Page,
@@ -165,9 +148,7 @@ export default {
                       this.edit(params.row.id);
                     }
                   }
-                },
-                "修改"
-              ),
+                }, "修改"),
               h(
                 "Button",
                 {
@@ -256,21 +237,13 @@ export default {
       });
     },
     export1() {
-      // if (type === 1) {
-      //   this.$refs.table.exportCsv({
-      //     filename: "the original data"
-      //   });
-      // }
-        this.$http
-          .get(`/merchants/export_excel?city_id=${this.city.id}`)
-          .then(res => {
-            console.log(111, this.city.id, res);
-            if (res.data.status === 1) {
-              this.show2 = false;
-              this.show1 = true;
-              alert(res.data.notice);
-            }
-          })
+      this.$http.get(`/merchants/export_excel?city_id=${this.city.id}`).then(res => {
+        if (res.data.status === 1) {
+          this.show2 = false;
+          this.show1 = true;
+          alert(res.data.notice);
+        }
+      })
     },
     down() {
       this.$http
@@ -335,28 +308,12 @@ export default {
         this.total = res.data.total;
       });
     },
-    searchByCategory(category_id) {
+    searchByCategory() {
       this.$http.get(`/merchants?category_id=${this.category.id}`).then(res => {
-        this.merchants = res.data.merchants;
-        this.total = res.data.total;
+        this.merchants = res.data.merchants
+        this.total = res.data.total
       });
     },
-    // clearCategory() {
-    //   this.$http
-    //     .get(`/merchants?city_id=${this.city.id || ""}&category_id=${""}`)
-    //     .then(res => {
-    //       this.merchants = res.data.merchants;
-    //       this.total = res.data.total;
-    //       console.log(this.city.id, 111);
-    //     });
-    // },
-    // clearCity() {
-    //   console.log(111);
-    //   this.$http.get(`/merchants`).then(res => {
-    //     this.merchants = res.data.merchants;
-    //     this.total = res.data.total;
-    //   });
-    // },
     search() {
       this.$http
         .get(

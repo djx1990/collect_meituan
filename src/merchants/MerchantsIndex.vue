@@ -1,18 +1,6 @@
 <template>
   <Row type="flex" :gitter="24">
     <Row type="flex" :gutter="12">
-      <!-- <Col :span="2">城市:</Col>
-      <Col :span="5">
-        <Input v-model="query" size="small" search @on-search="search"></Input>
-      </Col>
-      <Col :span="2">店名:</Col>
-      <Col :span="5">
-        <Input v-model="query1" size="small" search @on-search="search1"></Input>
-      </Col>
-      <Col :span="2">分类:</Col>
-      <Col :span="5">
-        <Input v-model="query2" size="small" search @on-search="search2"></Input>
-      </Col>-->
       <Col :span="10">
         <Select filterable @on-change="searchByCity" clearable v-model="city.id">
           <Option v-for="city in cities" :value="city.id" :key="city.id" :label="city.name"></Option>
@@ -20,7 +8,6 @@
       </Col>
       <Col :span="10">
         <Select filterable clearable v-model="category.id">
-          <!-- @on-change="searchByCategory" -->
           <Option
             v-for="category in categories"
             :value="category.id"
@@ -30,11 +17,8 @@
         </Select>
       </Col>
       <Col :span="4">
-        <Button @click="getMerchants">搜索</Button>
+        <Button @click="getMerchants(1)">搜索</Button>
       </Col>
-      <!-- <Col :span="2">
-        <Button type="primary" size="small" @click="search">搜索</Button>
-      </Col>-->
     </Row>
     <Divider dashed />
     <Row>
@@ -205,33 +189,27 @@ export default {
         name: ""
       },
       filePath: ""
-    };
+    }
   },
   activated(){
-    this.getMerchants(1)
+    this.getMerchants(this.current_page)
   },
   created() {
     this.$http.get(`/cities/list`).then(res => {
       this.cities = res.data.cities;
-    });
-    // this.$http.get("/merchants").then(res => {
-    //   this.merchants = res.data.merchants;
-    //   this.total = res.data.total;
-    //   this.current_page = res.data.current_page;
-    // });
+    })
     this.$http.get("/merchants/excel_file_path").then(res => {
-      this.filePath = res.data.file_path;
-    });
+      this.filePath = res.data.file_path
+    })
   },
   methods: {
-    show(merchant_id) {
+    show (merchant_id) {
       console.log(merchant_id);
       this.$router.push(`merchants/${merchant_id}`);
     },
-    remove(index) {
+    remove (index) {
       let merchant = this.merchants[index];
-
-      this.$http.delete(`merchants/${merchant.id}`).then(res => {
+      this.$http.delete(`/merchants/${merchant.id}`).then(res => {
         console.log(111);
         if (res.data.status === 1) {
           this.merchants.splice(index, 1);
@@ -239,14 +217,14 @@ export default {
         } else {
           alert(res.dasta.notice);
         }
-      });
+      })
     },
-    edit(merchant_id) {
+    edit (merchant_id) {
       console.log(111, merchant_id);
       this.$router.push(`/merchants/${merchant_id}/edit`);
     },
 
-    remove_all() {
+    remove_all () {
       this.$http.delete(`merchants/deleteall`).then(res => {
         if (res.data.status === 1) {
           this.merchants = [];
@@ -256,96 +234,37 @@ export default {
         }
       });
     },
-    export1() {
-      // if (type === 1) {
-      //   this.$refs.table.exportCsv({
-      //     filename: "the original data"
-      //   });
-      // }
-      this.$http.get(`/cities/list?city_name=${this.city.name}`).then(res => {
-        console.log(222, res);
-        this.$http
-          .get(`/merchants/export_excel?city_id=${this.city.id}`)
-          .then(res => {
-            console.log(111, this.city.id, res);
-            if (res.data.status === 1) {
-              this.show2 = false;
-              this.show1 = true;
-              alert(res.data.notice);
-            }
-          });
-      });
+    export1 () {
+      this.$http.get(`/merchants/export_excel?city_id=${this.city.id}`).then(res => {
+        if (res.data.status === 1) {
+          this.show2 = false
+          this.show1 = true
+          alert(res.data.notice)
+        }
+      })
     },
-    down() {
-      this.$http
-        .get(`/merchants/excel_file_path?city_id=${this.city.id}`)
-        .then(res => {
-          console.log(res.data.status, res, this.city.id);
-          if (res.data.status === 1) {
-            window.open(res.data.file_path);
-            this.show1 = false;
-            this.show2 = true;
-            alert("正在下载");
-          }
-        });
+    down () {
+      this.$http.get(`/merchants/excel_file_path?city_id=${this.city.id}`).then(res => {
+        if (res.data.status === 1) {
+          window.open(res.data.file_path)
+          this.show1 = false
+          this.show2 = true
+          alert("正在下载")
+        }
+      })
     },
-    // page(page) {
-    //   this.$http
-    //     .get(`/merchants?city_id=${this.city.id || ""}&page=${page}`)
-    //     .then(res => {
-    //       this.merchants = res.data.merchants;
-    //       this.total = res.data.total;
-    //     });
-    // },
-    // search() {
-    //   if (this.query == "") {
-    //     this.$http.get(`/merchants?query=${this.query}`).then(res => {
-    //       this.merchants = res.data.merchants;
-    //     });
-    //   } else {
-    //     this.merchants = this.merchants.filter(val => {
-    //       return val.city_name.includes(this.query);
-    //     });
-    //   }
-    // },
-    // search2() {
-    //   if (this.query2 == "") {
-    //     this.$http.get(`/merchants?query2=${this.query2}`).then(res => {
-    //       this.merchants = res.data.merchants;
-    //     });
-    //   } else {
-    //     this.merchants = this.merchants.filter(val => {
-    //       return val.catename.includes(this.query2);
-    //     });
-    //   }
-    // },
-    // search1() {
-    //   if (this.query1 == "") {
-    //     this.$http.get(`/merchants?query2=${this.query1}`).then(res => {
-    //       this.merchants = res.data.merchants;
-    //     });
-    //   } else {
-    //     this.merchants = this.merchants.filter(val => {
-    //       return val.name.includes(this.query1);
-    //     });
-    //   }
-    // },
-    searchByCity(value) {
+    searchByCity (value) {
       this.$http.get(`/categories/list?city_id=${value}`).then(res => {
         this.categories = res.data.categories;
-      });
-      // this.$http.get(`/merchants?city_id=${value}`).then(res => {
-      //   this.merchants = res.data.merchants;
-      //   this.total = res.data.total;
-      // });
+      })
     },
-    searchByCategory() {
+    searchByCategory () {
       this.$http.get(`/merchants?category_id=${this.category.id}`).then(res => {
         this.merchants = res.data.merchants;
         this.total = res.data.total;
-      });
+      })
     },
-    getMerchants(page) {
+    getMerchants (page) {
       let url = `/merchants?page=${page}`
       if(this.city.id){
         url += `&city_id=${this.city.id}`
@@ -361,23 +280,10 @@ export default {
         this.total = res.data.total
         this.current_page = res.data.current_page
       })
-    //   this.$http
-    //     .get(
-    //       `/merchants?city_id=${this.city.id || ""}&category_id=${this.category
-    //         .id || ""}`
-    //     )
-    //     .then(res => {
-    //       console.log(this.category.id, 111);
-    //       this.merchants = res.data.merchants;
-    //       this.total = res.data.total;
-    //       console.log(this.category.id, res.data);
-    //     });
-    // }
     },
     sortTotalBenefits(params){
       this.order = params.order
       this.getMerchants(1)
-      console.log(params)
     }
   }
 }

@@ -81,16 +81,15 @@ export default {
           name:"商户管理",
           icon:"ios-navigate",
           chilren:[
-            {name:"商户管理", icon:"ios-navigate", to:"/merchantsM"}
+            { name: "商家管理", icon: "ios-navigate", to: "/merchants" },
+            { name: "外买商家管理", icon: "ios-navigate", to: "/waimai_merchants" },
+            { name: "外卖订单管理", icon: "ios-navigate", to: "/order" },
           ]
         },
         {
           name: "平台管理",
           icon: "ios-navigate",
           chilren: [ 
-            { name: "商家管理", icon: "ios-navigate", to: "/merchants" },
-            { name: "外买商家管理", icon: "ios-navigate", to: "/waimai_merchants" },
-            { name: "外卖订单管理", icon: "ios-navigate", to: "/order" },
             { name: "城市", icon: "ios-navigate", to: "/cities" },
             { name: "团购", icon: "md-cart", to: "/tuangous" },
             { name: "代金券", icon: "md-cart", to: "/daijinjuans" },

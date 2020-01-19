@@ -40,72 +40,76 @@ export default {
     Input,
     DatePicker
   },
-  data() {
+  data () {
     return {
-      shop_name:null,
-      created_at:null,
+      shop_name: null,
+      created_at: null,
       total: null,
       current_page: 1,
-      merchants:[],
-      columns:[
+      merchants: [],
+      columns: [
         {
-          title:'店名',
-          key:"shop_name"
+          title: '店名',
+          key: "shop_name"
         },
         {
-          title:'地址',
-          key:"address"
+          title: '地址',
+          key: "address"
         },
         {
-          title:'联系人',
-          key:"real_name"
+          title: '联系人',
+          key: "real_name"
         },
         {
-          title:'电话',
-          key:"mobile"
-        },
-
-        {
-          title:'验证码',
-          key:"secret"
+          title: '电话',
+          key: "mobile"
         },
         {
-          title:'余额',
-          key:"balance",
-          render:(h,params)=>{
+          title: '验证码',
+          key: "secret"
+        },
+        {
+          title: '余额',
+          key: "balance",
+          render: (h, params) => {
             return h("div", this.fenChange(params.row.balance) + "元")
           }
         },
         {
-          title:'验证条数',
-          key:"secret_number"
+          title: '验证条数',
+          key: "secret_number"
         },
         {
-          title:'创建时间',
-          key:"created_at"
+          title: '创建时间',
+          key: "created_at"
         },
         {
-          title:'操作',
-          key:"action",
-          render:(h,params)=>{
-            return h("div",[
-              h("Button",{
+          title: '操作',
+          key: "action",
+          render: (h, params) => {
+            return h("div", [
+              h(Button, {
+                props: {
+                  type: 'primary',
+                  size: 'small'
+                },
                 on:{
-                  click:()=>{
+                  click: () => {
                     this.$router.push(`/merchantsM/${params.row.id}/edit`)
                   }
                 }
-              },"编辑"),
-              h("Button",{
-                style:{
-                  background:'red'
+              }, "编辑"),
+              h(Button, {
+                props: {
+                  type: 'error',
+                  size: 'small'
                 },
-                on:{
-                  click:()=>{
+                on: {
+                  click: () => {
                     this.remove(params.index)
                   }
                 }
-              },"删除")
+              }, "删除")
             ])
           }
         },
@@ -116,7 +120,7 @@ export default {
     this.getMerchants(1)
   },
   methods:{
-    getMerchants(page){
+    getMerchants (page) {
       let url = `/merchantsMList?page=${page}`
       if(this.shop_name){
         url += `&shop_name=${this.shop_name}`
@@ -130,11 +134,10 @@ export default {
         this.current_page = res.data.current_page
       })
     },
-    remove(index){
+    remove (index) {
       let merchantsM = this.merchants[index]
       this.$http.delete(`/merchantsMList/${merchantsM.id}`).then(res =>{
         if(res.data.status === 1){
-          console.log(111)
           this.merchantsM.splice(index,1)
         }
       })
