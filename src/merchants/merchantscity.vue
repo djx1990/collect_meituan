@@ -58,7 +58,7 @@ import {
   Page,
   Select,
   Option
-} from "iview";
+} from "iview"
 export default {
   components: {
     Table,
@@ -134,7 +134,7 @@ export default {
                   },
                   on: {
                     click: () => {
-                      this.show(params.row.id);
+                      this.show(params.row.id)
                     }
                   }
                 },
@@ -145,7 +145,7 @@ export default {
                 {
                   on: {
                     click: () => {
-                      this.edit(params.row.id);
+                      this.edit(params.row.id)
                     }
                   }
                 }, "修改"),
@@ -154,13 +154,13 @@ export default {
                 {
                   on: {
                     click: () => {
-                      this.remove(params.index);
+                      this.remove(params.index)
                     }
                   }
                 },
                 "删除"
               )
-            ]);
+            ])
           }
         }
       ],
@@ -177,154 +177,98 @@ export default {
         id: "",
         name: ""
       }
-    };
+    }
   },
   created() {
     this.$http.get(`/cities/list`).then(res => {
-      this.cities = res.data.cities;
-    });
-    this.city.id = this.$route.params.id;
+      this.cities = res.data.cities
+    })
+    this.city.id = this.$route.params.id
     this.$http
-      .get(`/merchants?page=${1}&city_id=${this.$route.params.id}`)
+      .get(`/merchants?page=${1}&city_id=${this.$route.params.id || ''}`)
       .then(res => {
-        this.merchants = res.data.merchants;
-        this.total = res.data.total;
-        this.current_page = res.data.current_page;
-      });
-    // this.$http.get(`/merchants?page=${1}&city_id=${""}`).then(res =>{
-    //   if(city_id === this.$route.params.id){
-    //     let that = this
-    //     this.$http.get(`/merchants?page=${1}&city_id=${that.$route.params.id}`).then(res =>{
-    //       this.merchants = res.data.merchants
-    //       this.total= res.data.total
-    //     })
-    //   }else{
-    //     this.merchants = res.data.merchants
-    //     this.total = res.data.total
-    //   }
-    // })
+        this.merchants = res.data.merchants
+        this.total = res.data.total
+        this.current_page = res.data.current_page
+      })
   },
   methods: {
     show(merchant_id) {
-      console.log(merchant_id);
-      this.$router.push(`/merchants/${merchant_id}`);
+      this.$router.push(`/merchants/${merchant_id}`)
     },
     remove(index) {
-      let merchant = this.merchants[index];
-
+      let merchant = this.merchants[index]
       this.$http.delete(`merchants/${merchant.id}`).then(res => {
-        console.log(111);
         if (res.data.status === 1) {
-          this.merchants.splice(index, 1);
-          alert(res.data.notice);
+          this.merchants.splice(index, 1)
+          alert(res.data.notice)
         } else {
-          alert(res.dasta.notice);
+          alert(res.dasta.notice)
         }
-      });
+      })
     },
     edit(merchant_id) {
-      console.log(111, merchant_id);
-      this.$router.push(`/merchants/${merchant_id}/edit`);
+      console.log(111, merchant_id)
+      this.$router.push(`/merchants/${merchant_id}/edit`)
     },
     remove_all() {
       this.$http.delete(`merchants/deleteall`).then(res => {
         if (res.data.status === 1) {
-          this.merchants = [];
-          alert(res.data.notice);
+          this.merchants = []
+          alert(res.data.notice)
         } else {
-          alert(res.data.notice);
+          alert(res.data.notice)
         }
-      });
+      })
     },
     export1() {
       this.$http.get(`/merchants/export_excel?city_id=${this.city.id}`).then(res => {
         if (res.data.status === 1) {
-          this.show2 = false;
-          this.show1 = true;
-          alert(res.data.notice);
+          this.show2 = false
+          this.show1 = true
+          alert(res.data.notice)
         }
       })
     },
     down() {
-      this.$http
-        .get(`/merchants/excel_file_path?city_id=${this.city.id}`)
-        .then(res => {
-          if (res.data.status === 1) {
-            window.open(res.data.file_path)
-            this.show1 = false;
-            this.show2 = true;
-            alert("正在下载");
-          }
-        });
+      this.$http.get(`/merchants/excel_file_path?city_id=${this.city.id}`).then(res => {
+        if (res.data.status === 1) {
+          window.open(res.data.file_path)
+          this.show1 = false
+          this.show2 = true
+          alert("正在下载")
+        }
+      })
     },
     page(page) {
       this.$http
         .get(`/merchants?city_id=${this.city.id || ""}&page=${page}`)
         .then(res => {
-          this.merchants = res.data.merchants;
-          this.total = res.data.total;
-          console.log(this.city.id);
-        });
+          this.merchants = res.data.merchants
+          this.total = res.data.total
+        })
     },
-    // search() {
-    //   if (this.query == "") {
-    //     this.$http.get(`/merchants?query=${this.query}`).then(res => {
-    //       this.merchants = res.data.merchants;
-    //     });
-    //   } else {
-    //     this.merchants = this.merchants.filter(val => {
-    //       return val.city_name.includes(this.query);
-    //     });
-    //   }
-    // },
-    // search2() {
-    //   if (this.query2 == "") {
-    //     this.$http.get(`/merchants?query2=${this.query2}`).then(res => {
-    //       this.merchants = res.data.merchants;
-    //     });
-    //   } else {
-    //     this.merchants = this.merchants.filter(val => {
-    //       return val.catename.includes(this.query2);
-    //     });
-    //   }
-    // },
-    // search1() {
-    //   if (this.query1 == "") {
-    //     this.$http.get(`/merchants?query2=${this.query1}`).then(res => {
-    //       this.merchants = res.data.merchants;
-    //     });
-    //   } else {
-    //     this.merchants = this.merchants.filter(val => {
-    //       return val.name.includes(this.query1);
-    //     });
-    //   }
-    // },
     searchByCity(value) {
       this.$http.get(`/categories/list?city_id=${value || ""}`).then(res => {
-        this.categories = res.data.categories;
-      });
+        this.categories = res.data.categories
+      })
       this.$http.get(`/merchants?city_id=${value}`).then(res => {
-        this.merchants = res.data.merchants;
-        this.total = res.data.total;
-      });
+        this.merchants = res.data.merchants
+        this.total = res.data.total
+      })
     },
     searchByCategory() {
       this.$http.get(`/merchants?category_id=${this.category.id}`).then(res => {
         this.merchants = res.data.merchants
         this.total = res.data.total
-      });
+      })
     },
     search() {
-      this.$http
-        .get(
-          `/merchants?city_id=${this.city.id || ""}&category_id=${this.category
-            .id || ""}`
-        )
-        .then(res => {
-          this.merchants = res.data.merchants;
-          this.total = res.data.total;
-        });
+      this.$http.get(`/merchants?city_id=${this.city.id || ""}&category_id=${this.category.id || ""}`).then(res => {
+          this.merchants = res.data.merchants
+          this.total = res.data.total
+        })
     }
   }
-};
+}
 </script>

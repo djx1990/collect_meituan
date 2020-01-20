@@ -132,13 +132,13 @@ const router = new VueRouter({
     },
     {
       path: "/cities",
-      name: "cities",
+      name: "cityIndex",
       meta: {
         layout: true,
         requiresAuth: true
       },
       component: () =>
-        import(/* webpackChunkName: "about" */ "./cities/index.vue")
+        import(/* webpackChunkName: "about" */ "./cities/CityIndex.vue")
     },
     {
       path: "/cities/:id",
@@ -148,7 +148,7 @@ const router = new VueRouter({
         requiresAuth: true
       },
       component: () =>
-        import(/* webpackChunkName: "about" */ "./cities/show.vue")
+        import(/* webpackChunkName: "about" */ "./cities/CityShow.vue")
     },
     {
       path: "/tuangous",
@@ -250,23 +250,12 @@ const router = new VueRouter({
         import(/* webpackChunkName: "about" */ "./maidans/show.vue")
     },
     {
-      path: "/categoriescity/:id",
-      name: "CategoriesCity",
-      meta: {
-        layout: true,
-        requiresAuth: true
-      },
-      component: () =>
-        import(
-          /* webpackChunkName: "about" */ "./categories/CategoriesCity.vue"
-        )
-    },
-    {
       path: "/categories",
       name: "CategoriesIndex",
       meta: {
         layout: true,
-        requiresAuth: true
+        requiresAuth: true,
+        keepAlive: true
       },
       component: () =>
         import(/* webpackChunkName: "about" */ "./categories/CategoriesIndex.vue")

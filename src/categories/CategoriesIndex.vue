@@ -2,7 +2,7 @@
   <div>
     <Row type="flex" :gutter="2">
       <Col :span="20">
-        <Select  clearable v-model="city.id" style="width: 20%; margin-right: 1rem" placeholder="请选择城市">
+        <Select  clearable v-model="cityId" style="width: 20%; margin-right: 1rem" placeholder="请选择城市">
           <Option v-for="city in cities" :value="city.id" :key="city.id" :label="city.name"></Option>
         </Select>
         <Button @click='getCategories(1)' type='primary'>搜索</Button>
@@ -63,44 +63,34 @@ export default {
       cities: [],
       total: 0,
       current_page: 1,
-      city: {
-        id: ""
-      }
-    };
+      cityId: ''
+    }
   },
-  created() {
-    this.getCategories()
+  activated () {
+    this.getCategories(this.current_page)
+    this.cityId = this.$route.query.city_id
     this.$http.get(`/cities`).then(res => {
-      this.cities = res.data.cities;
-    });
+      this.cities = res.data.cities
+    })
   },
   methods: {
     getCategories (page) {
-      this.$http.get(`/categories?oage=${page}&citi_id=${this.city.id}`).then(res => {
+      this.$http.get(`/categories?page=${page}&city_id=${this.cityId || ''}`).then(res => {
         this.categories = res.data.categories
         this.total = res.data.total
-    });
+      })
     },
     searchByCity(value) {
       this.$http.get(`/categories?city_id=${value}`).then(res => {
-        this.categories = res.data.categories;
-        this.total = res.data.total;
-      });
+        this.categories = res.data.categories
+        this.total = res.data.total
+      })
     },
     clear() {
       this.$http.get(`/categories`).then(res => {
-        this.categories = res.data.categories;
-        this.total = res.data.total;
-      });
-    },
-    page(page) {
-      this.$http
-        .get(`/categories?city_id=${this.city.id||""}&page=${page}`)
-        .then(res => {
-          this.categories = res.data.categories;
-          this.total = res.data.total;
-          console.log();
-        });
+        this.categories = res.data.categories
+        this.total = res.data.total
+      })
     }
   }
 };

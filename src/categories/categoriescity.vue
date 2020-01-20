@@ -62,9 +62,10 @@ export default {
   created() {
     this.getCategories(this.current_page)
     this.$http.get(`/cities`).then(res => {
-      this.cities = res.data.cities;
-    });
-    this.city_id = this.$route.params.id;
+      this.cities = res.data.cities
+    })
+    console.log(this.$route.params.id)
+    this.city_id = this.$route.params.id
   },
   methods: {
     getCategories (page) {
@@ -76,8 +77,8 @@ export default {
     },
     searchByCity(value) {
       this.$http.get(`/categories?city_id=${value}`).then(res => {
-        this.categories = res.data.categories;
-        this.total = res.data.total;
+        this.categories = res.data.categories
+        this.total = res.data.total
       });
     },
     clear() {
@@ -93,9 +94,9 @@ export default {
       this.$http
         .get(`/categories?city_id=${this.city_id || ""}&page=${page}`)
         .then(res => {
-          this.categories = res.data.categories;
-          this.total = res.data.total;
-        });
+          this.categories = res.data.categories
+          this.total = res.data.total
+        })
     }
   }
 };

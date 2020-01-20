@@ -140,7 +140,7 @@ export default {
                   },
                 on:{
                   click: () => {
-                    this.$router.push(`/categoriescity/${params.row.id}`)
+                    this.$router.push(`/categories?city_id=${params.row.id}`)
                   }
                 }
               }, '查看分类'),
@@ -245,16 +245,11 @@ export default {
       })
     },
     sort(column){
-      console.log(column)
-      console.log(column.key, 111)
-      console.log(column.order)
       if(column.key == 'merchants_count'){
-        console.log(column.key, 111)
         this.$http.get(`/cities?merchants_order=${column.order}`).then(res =>{
           this.cities = res.data.cities
         })
       }else if(column.key == 'categories_count'){
-        console.log(column.key, 111)
         this.$http.get(`/cities?categories_order=${column.order}`).then(res =>{
           this.cities = res.data.cities
         })
